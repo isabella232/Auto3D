@@ -323,6 +323,44 @@
           </Items>
         </Files>
       </GroupItem>
+      <GroupItem Name="LogitechHarmony">
+        <ParentGroup />
+        <DisplayName>LogitechHarmony</DisplayName>
+        <DefaulChecked>true</DefaulChecked>
+        <Description>LogitechHarmony</Description>
+        <Files>
+          <Items>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\Auto3D-LogitechHarmony\bin\Release\Auto3D-LogitechHarmony.dll</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{f3fcac74-081e-41c5-bd94-a17e51e2ffa2}-Auto3D-LogitechHarmony.dll</ZipFileName>
+              <DestinationFilename>%Plugins%\Process\Auto3D\Auto3D-LogitechHarmony.dll</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\Auto3D-LogitechHarmony\bin\Release\HarmonyHub.dll</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{c89a49f2-547f-41e0-a8eb-3390a7581bcf}-HarmonyHub.dll</ZipFileName>
+              <DestinationFilename>%Plugins%\Process\Auto3D\HarmonyHub.dll</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\Auto3D-LogitechHarmony\bin\Release\agsXMPP.dll</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{f7b89687-8d23-42dd-87c0-7d910db95154}-agsXMPP.dll</ZipFileName>
+              <DestinationFilename>%Plugins%\Process\Auto3D\agsXMPP.dll</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\Auto3D-LogitechHarmony\LogitechHarmony.xml</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{21d09640-c103-4160-8ca1-855dd0793aba}-LogitechHarmony.xml</ZipFileName>
+              <DestinationFilename>%Config%\Auto3D\LogitechHarmony.xml</DestinationFilename>
+            </FileItem>
+          </Items>
+        </Files>
+      </GroupItem>
     </Items>
   </Groups>
   <Sections>
@@ -475,14 +513,14 @@ Click Next to continue or Cancel to exit Setup.</Value>
   <GeneralInfo>
     <Name>Auto3D</Name>
     <Id>a9fb891a-4d39-4769-84ff-9eb11c879afd</Id>
-    <Author>Marcus Venturi</Author>
+    <Author>Marcus Venturi, Stéphane Lenclud</Author>
     <HomePage />
     <ForumPage />
     <UpdateUrl />
     <Version>
       <Major>1</Major>
       <Minor>15</Minor>
-      <Build>0</Build>
+      <Build>1</Build>
       <Revision>0</Revision>
     </Version>
     <ExtensionDescription />
@@ -736,11 +774,39 @@ Click Next to continue or Cancel to exit Setup.</Value>
         <ZipFileName>Installer{CopyFile}\{3d6904e0-312c-4e21-b1a2-2aa35584a8bc}-Generic-IR.xml</ZipFileName>
         <DestinationFilename>%Config%\Auto3D\Generic-IR.xml</DestinationFilename>
       </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\Auto3D-LogitechHarmony\bin\Release\Auto3D-LogitechHarmony.dll</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{f3fcac74-081e-41c5-bd94-a17e51e2ffa2}-Auto3D-LogitechHarmony.dll</ZipFileName>
+        <DestinationFilename>%Plugins%\Process\Auto3D\Auto3D-LogitechHarmony.dll</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\Auto3D-LogitechHarmony\bin\Release\HarmonyHub.dll</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{c89a49f2-547f-41e0-a8eb-3390a7581bcf}-HarmonyHub.dll</ZipFileName>
+        <DestinationFilename>%Plugins%\Process\Auto3D\HarmonyHub.dll</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\Auto3D-LogitechHarmony\bin\Release\agsXMPP.dll</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{f7b89687-8d23-42dd-87c0-7d910db95154}-agsXMPP.dll</ZipFileName>
+        <DestinationFilename>%Plugins%\Process\Auto3D\agsXMPP.dll</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\Auto3D-LogitechHarmony\LogitechHarmony.xml</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{21d09640-c103-4160-8ca1-855dd0793aba}-LogitechHarmony.xml</ZipFileName>
+        <DestinationFilename>%Config%\Auto3D\LogitechHarmony.xml</DestinationFilename>
+      </FileItem>
       <FileItem InstallType="CopyFile" SystemFile="true" Modified="true">
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
         <LocalFileName>..\Auto3D\Auto3d-Icon2.png</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{5f24b72c-0486-4fc4-ac5c-d12e6d0035b4}-Auto3d-Icon2.png</ZipFileName>
+        <ZipFileName>Installer{CopyFile}\{9404b96a-0dbd-452a-9661-337983ff4e73}-Auto3d-Icon2.png</ZipFileName>
         <DestinationFilename />
       </FileItem>
     </Items>
