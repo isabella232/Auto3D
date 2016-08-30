@@ -1,0 +1,808 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PackageClass xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Version>2.0</Version>
+  <Groups>
+    <Items>
+      <GroupItem Name="Plugin">
+        <ParentGroup />
+        <DisplayName>Plugin</DisplayName>
+        <DefaulChecked>true</DefaulChecked>
+        <Description>Plugin</Description>
+        <Files>
+          <Items>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\Auto3D\bin\Debug\Auto3D.dll</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{94d38946-4066-4adf-bc54-19299d1a68d4}-Auto3D.dll</ZipFileName>
+              <DestinationFilename>%Plugins%\Process\Auto3D.dll</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\Auto3D-BaseDevice\bin\Debug\Auto3D-BaseDevice.dll</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{2d959cfe-41aa-4139-b664-dc9da61a433b}-Auto3D-BaseDevice.dll</ZipFileName>
+              <DestinationFilename>%Plugins%\Process\Auto3D-BaseDevice.dll</DestinationFilename>
+            </FileItem>
+          </Items>
+        </Files>
+      </GroupItem>
+      <GroupItem Name="Philips">
+        <ParentGroup />
+        <DisplayName>Philips</DisplayName>
+        <DefaulChecked>true</DefaulChecked>
+        <Description>Philips</Description>
+        <Files>
+          <Items>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\Auto3D-Philips\bin\Debug\Auto3D-Philips.dll</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{b171578b-10d9-40b2-bda0-7e5b48572d81}-Auto3D-Philips.dll</ZipFileName>
+              <DestinationFilename>%Plugins%\Process\Auto3D\Auto3D-Philips.dll</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\Auto3D-Philips\libdirect.dll</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{96086927-1a5a-44b8-857c-e1a9864b0c32}-libdirect.dll</ZipFileName>
+              <DestinationFilename>%Plugins%\Process\Auto3D\libdirect.dll</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\Auto3D-Philips\libdirectfb.dll</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{c134c5be-277b-4118-ac66-739904c89b32}-libdirectfb.dll</ZipFileName>
+              <DestinationFilename>%Plugins%\Process\Auto3D\libdirectfb.dll</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\Auto3D-Philips\libdivine.dll</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{bf713d34-0575-4d87-9656-848c96a4cb91}-libdivine.dll</ZipFileName>
+              <DestinationFilename>%Plugins%\Process\Auto3D\libdivine.dll</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\Auto3D-Philips\libfusion.dll</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{4eb781a7-e1a0-4105-853d-81253ffd5bd1}-libfusion.dll</ZipFileName>
+              <DestinationFilename>%Plugins%\Process\Auto3D\libfusion.dll</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\Auto3D-Philips\libfusiondale.dll</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{4e94a8a7-c3a3-4ac8-9487-be320443171c}-libfusiondale.dll</ZipFileName>
+              <DestinationFilename>%Plugins%\Process\Auto3D\libfusiondale.dll</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\Auto3D-Philips\libjs.dll</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{07dd40bd-4ade-4201-b6a5-589fd74323a7}-libjs.dll</ZipFileName>
+              <DestinationFilename>%Plugins%\Process\Auto3D\libjs.dll</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\Auto3D-Philips\libvoodoo.dll</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{a5e4ba8f-ffec-4ba7-a3fa-a62ba86b1948}-libvoodoo.dll</ZipFileName>
+              <DestinationFilename>%Plugins%\Process\Auto3D\libvoodoo.dll</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\Auto3D-Philips\Philips.xml</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{19e14719-3ffc-4025-a38b-7ea32a0c8deb}-55PFL7606K-02.cfg</ZipFileName>
+              <DestinationFilename>%Config%\Auto3D\Philips.xml</DestinationFilename>
+            </FileItem>
+          </Items>
+        </Files>
+      </GroupItem>
+      <GroupItem Name="Samsung">
+        <ParentGroup />
+        <DisplayName>Samsung</DisplayName>
+        <DefaulChecked>true</DefaulChecked>
+        <Description>Samsung</Description>
+        <Files>
+          <Items>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\Auto3D-Samsung\bin\Debug\Auto3D-Samsung.dll</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{6233bd5e-b688-4f3c-9b67-a0ce520a573d}-Auto3D-Samsung.dll</ZipFileName>
+              <DestinationFilename>%Plugins%\Process\Auto3D\Auto3D-Samsung.dll</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\Auto3D-Samsung\iRemoteWrapper\iRemote.dll</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{5905ee9a-66c7-484e-8cb0-4231b5a65547}-iRemote.dll</ZipFileName>
+              <DestinationFilename>%Plugins%\Process\Auto3D\iRemote.dll</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\Auto3D-Samsung\Samsung.xml</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{0594619b-e83d-4696-8fd6-727572f8e95f}-UE55D6500.cfg</ZipFileName>
+              <DestinationFilename>%Config%\Auto3D\Samsung.xml</DestinationFilename>
+            </FileItem>
+          </Items>
+        </Files>
+      </GroupItem>
+      <GroupItem Name="Sony">
+        <ParentGroup />
+        <DisplayName>Sony</DisplayName>
+        <DefaulChecked>true</DefaulChecked>
+        <Description>Sony</Description>
+        <Files>
+          <Items>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\Auto3D-Sony\bin\Debug\Auto3D-Sony.dll</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{4de32c0f-956b-4011-a7ac-5817c43adcc7}-Auto3D-Sony.dll</ZipFileName>
+              <DestinationFilename>%Plugins%\Process\Auto3D\Auto3D-Sony.dll</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\Auto3D-Sony\Sony.xml</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{4cd93314-eba8-4fb8-86e4-49fc946b89d4}-Sony.xml</ZipFileName>
+              <DestinationFilename>%Config%\Auto3D\Sony.xml</DestinationFilename>
+            </FileItem>
+          </Items>
+        </Files>
+      </GroupItem>
+      <GroupItem Name="Epson">
+        <ParentGroup />
+        <DisplayName>Epson</DisplayName>
+        <DefaulChecked>true</DefaulChecked>
+        <Description>Epson</Description>
+        <Files>
+          <Items>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\Auto3D-Epson\bin\Debug\Auto3D-Epson.dll</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{3b541c89-4725-4a1a-9a48-c3c4299fa79c}-Auto3D-Epson.dll</ZipFileName>
+              <DestinationFilename>%Plugins%\Process\Auto3D\Auto3D-Epson.dll</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\Auto3D-Epson\Epson.xml</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{6ac830ee-9ee1-4d60-8a62-5d62bddd3a4e}-Default.cfg</ZipFileName>
+              <DestinationFilename>%Config%\Auto3D\Epson.xml</DestinationFilename>
+            </FileItem>
+          </Items>
+        </Files>
+      </GroupItem>
+      <GroupItem Name="Panasonic">
+        <ParentGroup />
+        <DisplayName>Panasonic</DisplayName>
+        <DefaulChecked>true</DefaulChecked>
+        <Description>Panasonic</Description>
+        <Files>
+          <Items>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\Auto3D-Panasonic\bin\Debug\Auto3D-Panasonic.dll</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{198d0c2f-3176-47fa-87c0-c3137e4eafda}-Auto3D-Panasonic.dll</ZipFileName>
+              <DestinationFilename>%Plugins%\Process\Auto3D\Auto3D-Panasonic.dll</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\Auto3D-Panasonic\Panasonic.xml</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{694e4278-156d-4a86-8362-cdf908409b27}-VIErA.cfg</ZipFileName>
+              <DestinationFilename>%Config%\Auto3D\Panasonic.xml</DestinationFilename>
+            </FileItem>
+          </Items>
+        </Files>
+      </GroupItem>
+      <GroupItem Name="LG">
+        <ParentGroup />
+        <DisplayName>LG</DisplayName>
+        <DefaulChecked>true</DefaulChecked>
+        <Description>LG</Description>
+        <Files>
+          <Items>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\Auto3D-LG\bin\Debug\Auto3D-LG.dll</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{a6284051-3ca9-4740-9fc6-eaacc23d049e}-Auto3D-LG.dll</ZipFileName>
+              <DestinationFilename>%Plugins%\Process\Auto3D\Auto3D-LG.dll</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\Auto3D-LG\LG.xml</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{433b4b67-1b3b-4f11-92bb-c423c0998e9e}-LG.xml</ZipFileName>
+              <DestinationFilename>%Config%\Auto3D\LG.xml</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\Externals\websocket-sharp.dll</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{f5f00c7e-c929-465c-808b-59c446eb4316}-websocket-sharp.dll</ZipFileName>
+              <DestinationFilename>%Plugins%\Process\Auto3D\websocket-sharp.dll</DestinationFilename>
+            </FileItem>
+          </Items>
+        </Files>
+      </GroupItem>
+      <GroupItem Name="Optoma">
+        <ParentGroup />
+        <DisplayName>Optoma</DisplayName>
+        <DefaulChecked>true</DefaulChecked>
+        <Description>Optoma</Description>
+        <Files>
+          <Items>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\Auto3D-Optoma\bin\Debug\Auto3D-Optoma.dll</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{d9e5bcde-cf7e-4d81-b98a-691ae9e76b51}-Auto3D-Optoma.dll</ZipFileName>
+              <DestinationFilename>%Plugins%\Process\Auto3D\Auto3D-Optoma.dll</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\Auto3D-Optoma\Optoma.xml</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{aa7daa25-e2b7-4624-ad9e-862f615817ea}-Optoma.xml</ZipFileName>
+              <DestinationFilename>%Config%\Auto3D\Optoma.xml</DestinationFilename>
+            </FileItem>
+          </Items>
+        </Files>
+      </GroupItem>
+      <GroupItem Name="SonyVP">
+        <ParentGroup />
+        <DisplayName>SonyVP</DisplayName>
+        <DefaulChecked>true</DefaulChecked>
+        <Description>SonyVP</Description>
+        <Files>
+          <Items>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\Auto3D-SonyVP\bin\Debug\Auto3D-SonyVP.dll</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{43216408-9f8b-4140-a7ae-7d911db7ad51}-Auto3D-SonyVP.dll</ZipFileName>
+              <DestinationFilename>%Plugins%\Process\Auto3D\Auto3D-SonyVP.dll</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\Auto3D-SonyVP\SonyVP.xml</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{5cb9dee4-fb82-435b-940a-67f8d0ac307e}-SonyVP.xml</ZipFileName>
+              <DestinationFilename>%Config%\Auto3D\SonyVP.xml</DestinationFilename>
+            </FileItem>
+          </Items>
+        </Files>
+      </GroupItem>
+      <GroupItem Name="Common">
+        <ParentGroup />
+        <DisplayName>Common</DisplayName>
+        <DefaulChecked>true</DefaulChecked>
+        <Description>Common</Description>
+        <Files>
+          <Items>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\Externals\Newtonsoft.Json.dll</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{dd76f1ad-b794-424c-8192-ef402e4144e6}-Newtonsoft.Json.dll</ZipFileName>
+              <DestinationFilename>%Plugins%\Process\Auto3D\Newtonsoft.Json.dll</DestinationFilename>
+            </FileItem>
+          </Items>
+        </Files>
+      </GroupItem>
+      <GroupItem Name="GenericIR">
+        <ParentGroup />
+        <DisplayName>GenericIR</DisplayName>
+        <DefaulChecked>true</DefaulChecked>
+        <Description>GenericIR</Description>
+        <Files>
+          <Items>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\Auto3D-GenericDevice\bin\Debug\Auto3D-GenericDevice.dll</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{4b8bd6cf-4730-485e-accb-10881e2219a0}-Auto3D-GenericDevice.dll</ZipFileName>
+              <DestinationFilename>%Plugins%\Process\Auto3D\Auto3D-GenericDevice.dll</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\Auto3D-GenericDevice\Generic-IR.xml</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{3d6904e0-312c-4e21-b1a2-2aa35584a8bc}-Generic-IR.xml</ZipFileName>
+              <DestinationFilename>%Config%\Auto3D\Generic-IR.xml</DestinationFilename>
+            </FileItem>
+          </Items>
+        </Files>
+      </GroupItem>
+      <GroupItem Name="SharpLibDisplay">
+        <ParentGroup />
+        <DisplayName>SharpLibDisplay</DisplayName>
+        <DefaulChecked>true</DefaulChecked>
+        <Description>SharpLibDisplay</Description>
+        <Files>
+          <Items>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\Auto3D-SharpLibDisplay\bin\Debug\Auto3D-SharpLibDisplay.dll</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{3b48b660-3526-4461-8312-b60cb2024b9d}-Auto3D-SharpLibDisplay.dll</ZipFileName>
+              <DestinationFilename>%Plugins%\Process\Auto3D\Auto3D-SharpLibDisplay.dll</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\Auto3D-SharpLibDisplay\bin\Debug\SharpLibDisplay.dll</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{3bce5bef-4808-4870-b09f-335b3f852e1f}-SharpLibDisplay.dll</ZipFileName>
+              <DestinationFilename>%Base%\SharpLibDisplay.dll</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\Auto3D-SharpLibDisplay\SharpLibDisplay.xml</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{b2faef83-e155-4bc1-8053-b3b8c41abd40}-SharpLibDisplay.xml</ZipFileName>
+              <DestinationFilename>%Config%\Auto3D\SharpLibDisplay.xml</DestinationFilename>
+            </FileItem>
+          </Items>
+        </Files>
+      </GroupItem>
+    </Items>
+  </Groups>
+  <Sections>
+    <Items>
+      <SectionItem Guid="a13cbc10-6d13-497a-ab34-aa08f7501b81" Name="Welcome Screen" ConditionGroup="">
+        <Params>
+          <Items>
+            <SectionParam Name="Header text">
+              <Value>Welcome to the Extension Installer for [Name]</Value>
+              <ValueType>String</ValueType>
+              <Description />
+            </SectionParam>
+            <SectionParam Name="Description">
+              <Value>This will install [Name] version [Version] on your computer.
+It is recommended that you close all other applications before continuing.
+Click Next to continue or Cancel to exit Setup.</Value>
+              <ValueType>String</ValueType>
+              <Description />
+            </SectionParam>
+            <SectionParam Name="Left part image">
+              <Value />
+              <ValueType>File</ValueType>
+              <Description />
+            </SectionParam>
+            <SectionParam Name="Header image">
+              <Value>..\Auto3D\Auto3d-Icon2.png</Value>
+              <ValueType>File</ValueType>
+              <Description>Image in upper right part</Description>
+            </SectionParam>
+          </Items>
+        </Params>
+        <Actions>
+          <Items />
+        </Actions>
+        <IncludedGroups />
+        <PanelName>Welcome Screen</PanelName>
+        <WizardButtonsEnum>NextCancel</WizardButtonsEnum>
+      </SectionItem>
+      <SectionItem Guid="119451b5-de28-4894-b569-e59a0e06db6a" Name="Install Section" ConditionGroup="">
+        <Params>
+          <Items>
+            <SectionParam Name="Header Title">
+              <Value>Auto3D</Value>
+              <ValueType>String</ValueType>
+              <Description>Header title</Description>
+            </SectionParam>
+            <SectionParam Name="Header description">
+              <Value>Automatic 3D Switcher for TV / Beamer</Value>
+              <ValueType>String</ValueType>
+              <Description>Description of section, shown in under section title</Description>
+            </SectionParam>
+            <SectionParam Name="Header image">
+              <Value>..\Auto3D\Auto3d-Icon2.png</Value>
+              <ValueType>File</ValueType>
+              <Description>Image in upper right part</Description>
+            </SectionParam>
+          </Items>
+        </Params>
+        <Actions>
+          <Items>
+            <ActionItem Name="InstallFiles" ActionType="InstallFiles" ConditionGroup="">
+              <Params>
+                <Items />
+              </Params>
+              <ExecuteLocation>AfterPanelShow</ExecuteLocation>
+            </ActionItem>
+          </Items>
+        </Actions>
+        <IncludedGroups />
+        <PanelName>Install Section</PanelName>
+        <WizardButtonsEnum>Next</WizardButtonsEnum>
+      </SectionItem>
+      <SectionItem Guid="83356a79-cf60-43c4-82b7-3952b8ab6737" Name="Setup Complete" ConditionGroup="">
+        <Params>
+          <Items>
+            <SectionParam Name="Header text">
+              <Value>The Extension Installer Wizard has successfully installed [Name].</Value>
+              <ValueType>String</ValueType>
+              <Description />
+            </SectionParam>
+            <SectionParam Name="Left part image">
+              <Value />
+              <ValueType>File</ValueType>
+              <Description />
+            </SectionParam>
+            <SectionParam Name="Show radio buttons">
+              <Value>NO</Value>
+              <ValueType>Bool</ValueType>
+              <Description>Use radiobutton in place of combobox</Description>
+            </SectionParam>
+            <SectionParam Name="Header image">
+              <Value>..\Auto3D\Auto3d-Icon2.png</Value>
+              <ValueType>File</ValueType>
+              <Description>Image in upper right part</Description>
+            </SectionParam>
+          </Items>
+        </Params>
+        <Actions>
+          <Items />
+        </Actions>
+        <IncludedGroups />
+        <PanelName>Setup Complete</PanelName>
+        <WizardButtonsEnum>Finish</WizardButtonsEnum>
+      </SectionItem>
+    </Items>
+  </Sections>
+  <Dependencies>
+    <Items>
+      <DependencyItem>
+        <Type>MediaPortal</Type>
+        <Id />
+        <MinVersion>
+          <Major>1</Major>
+          <Minor>1</Minor>
+          <Build>6</Build>
+          <Revision>27644</Revision>
+        </MinVersion>
+        <MaxVersion>
+          <Major>1</Major>
+          <Minor>1</Minor>
+          <Build>6</Build>
+          <Revision>27644</Revision>
+        </MaxVersion>
+        <WarnOnly>false</WarnOnly>
+        <Message>requires MediaPortal version 1.1.6.27644 to 1.1.6.27644.</Message>
+        <Name>MediaPortal</Name>
+      </DependencyItem>
+    </Items>
+  </Dependencies>
+  <PluginDependencies>
+    <Items>
+      <PluginDependencyItem AssemblyName="Auto3D.dll">
+        <CompatibleVersion>
+          <Items>
+            <CompatibleVersionItem>
+              <MinRequiredVersion>1.1.6.27644</MinRequiredVersion>
+              <DesignedForVersion>1.4.0.0</DesignedForVersion>
+            </CompatibleVersionItem>
+          </Items>
+        </CompatibleVersion>
+        <SubSystemsUsed>
+          <Items>
+            <SubSystemItem Name="MP.Config" />
+            <SubSystemItem Name="MP.SkinEngine" />
+          </Items>
+        </SubSystemsUsed>
+      </PluginDependencyItem>
+    </Items>
+  </PluginDependencies>
+  <GeneralInfo>
+    <Name>Auto3D</Name>
+    <Id>a9fb891a-4d39-4769-84ff-9eb11c879afd</Id>
+    <Author>Marcus Venturi</Author>
+    <HomePage />
+    <ForumPage />
+    <UpdateUrl />
+    <Version>
+      <Major>1</Major>
+      <Minor>15</Minor>
+      <Build>1</Build>
+      <Revision>0</Revision>
+    </Version>
+    <ExtensionDescription />
+    <VersionDescription />
+    <DevelopmentStatus>Beta</DevelopmentStatus>
+    <OnlineLocation />
+    <ReleaseDate>2016-06-30T21:05:58</ReleaseDate>
+    <Tags />
+    <Location>Auto3D.mpe1</Location>
+    <Params>
+      <Items>
+        <SectionParam Name="Icon">
+          <Value>..\Auto3D\Auto3d-Icon2.png</Value>
+          <ValueType>File</ValueType>
+          <Description>The icon file of the package (jpg,png,bmp)</Description>
+        </SectionParam>
+        <SectionParam Name="Online Icon">
+          <Value />
+          <ValueType>String</ValueType>
+          <Description>The icon file of the package stored online (jpg,png,bmp)</Description>
+        </SectionParam>
+        <SectionParam Name="Configuration file">
+          <Value />
+          <ValueType>Template</ValueType>
+          <Description>The file used to configure the extension.
+ If have .exe extension the will be executed
+ If have .dll extension used like MP plugin configuration</Description>
+        </SectionParam>
+        <SectionParam Name="Online Screenshots">
+          <Value />
+          <ValueType>String</ValueType>
+          <Description>Online stored screenshot urls separated by ; </Description>
+        </SectionParam>
+        <SectionParam Name="Force to uninstall on update">
+          <Value>YES</Value>
+          <ValueType>Bool</ValueType>
+          <Description>Show dialog and force to uninstall previous version when updating an extension. Should only be disabled if you are using an NSIS/MSI installer.</Description>
+        </SectionParam>
+      </Items>
+    </Params>
+  </GeneralInfo>
+  <UniqueFileList>
+    <Items>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\Auto3D\bin\Debug\Auto3D.dll</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{94d38946-4066-4adf-bc54-19299d1a68d4}-Auto3D.dll</ZipFileName>
+        <DestinationFilename>%Plugins%\Process\Auto3D.dll</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\Auto3D-BaseDevice\bin\Debug\Auto3D-BaseDevice.dll</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{2d959cfe-41aa-4139-b664-dc9da61a433b}-Auto3D-BaseDevice.dll</ZipFileName>
+        <DestinationFilename>%Plugins%\Process\Auto3D-BaseDevice.dll</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\Auto3D-Philips\bin\Debug\Auto3D-Philips.dll</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{b171578b-10d9-40b2-bda0-7e5b48572d81}-Auto3D-Philips.dll</ZipFileName>
+        <DestinationFilename>%Plugins%\Process\Auto3D\Auto3D-Philips.dll</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\Auto3D-Philips\libdirect.dll</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{96086927-1a5a-44b8-857c-e1a9864b0c32}-libdirect.dll</ZipFileName>
+        <DestinationFilename>%Plugins%\Process\Auto3D\libdirect.dll</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\Auto3D-Philips\libdirectfb.dll</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{c134c5be-277b-4118-ac66-739904c89b32}-libdirectfb.dll</ZipFileName>
+        <DestinationFilename>%Plugins%\Process\Auto3D\libdirectfb.dll</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\Auto3D-Philips\libdivine.dll</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{bf713d34-0575-4d87-9656-848c96a4cb91}-libdivine.dll</ZipFileName>
+        <DestinationFilename>%Plugins%\Process\Auto3D\libdivine.dll</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\Auto3D-Philips\libfusion.dll</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{4eb781a7-e1a0-4105-853d-81253ffd5bd1}-libfusion.dll</ZipFileName>
+        <DestinationFilename>%Plugins%\Process\Auto3D\libfusion.dll</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\Auto3D-Philips\libfusiondale.dll</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{4e94a8a7-c3a3-4ac8-9487-be320443171c}-libfusiondale.dll</ZipFileName>
+        <DestinationFilename>%Plugins%\Process\Auto3D\libfusiondale.dll</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\Auto3D-Philips\libjs.dll</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{07dd40bd-4ade-4201-b6a5-589fd74323a7}-libjs.dll</ZipFileName>
+        <DestinationFilename>%Plugins%\Process\Auto3D\libjs.dll</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\Auto3D-Philips\libvoodoo.dll</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{a5e4ba8f-ffec-4ba7-a3fa-a62ba86b1948}-libvoodoo.dll</ZipFileName>
+        <DestinationFilename>%Plugins%\Process\Auto3D\libvoodoo.dll</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\Auto3D-Philips\Philips.xml</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{19e14719-3ffc-4025-a38b-7ea32a0c8deb}-55PFL7606K-02.cfg</ZipFileName>
+        <DestinationFilename>%Config%\Auto3D\Philips.xml</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\Auto3D-Samsung\bin\Debug\Auto3D-Samsung.dll</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{6233bd5e-b688-4f3c-9b67-a0ce520a573d}-Auto3D-Samsung.dll</ZipFileName>
+        <DestinationFilename>%Plugins%\Process\Auto3D\Auto3D-Samsung.dll</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\Auto3D-Samsung\iRemoteWrapper\iRemote.dll</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{5905ee9a-66c7-484e-8cb0-4231b5a65547}-iRemote.dll</ZipFileName>
+        <DestinationFilename>%Plugins%\Process\Auto3D\iRemote.dll</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\Auto3D-Samsung\Samsung.xml</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{0594619b-e83d-4696-8fd6-727572f8e95f}-UE55D6500.cfg</ZipFileName>
+        <DestinationFilename>%Config%\Auto3D\Samsung.xml</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\Auto3D-Sony\bin\Debug\Auto3D-Sony.dll</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{4de32c0f-956b-4011-a7ac-5817c43adcc7}-Auto3D-Sony.dll</ZipFileName>
+        <DestinationFilename>%Plugins%\Process\Auto3D\Auto3D-Sony.dll</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\Auto3D-Sony\Sony.xml</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{4cd93314-eba8-4fb8-86e4-49fc946b89d4}-Sony.xml</ZipFileName>
+        <DestinationFilename>%Config%\Auto3D\Sony.xml</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\Auto3D-Epson\bin\Debug\Auto3D-Epson.dll</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{3b541c89-4725-4a1a-9a48-c3c4299fa79c}-Auto3D-Epson.dll</ZipFileName>
+        <DestinationFilename>%Plugins%\Process\Auto3D\Auto3D-Epson.dll</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\Auto3D-Epson\Epson.xml</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{6ac830ee-9ee1-4d60-8a62-5d62bddd3a4e}-Default.cfg</ZipFileName>
+        <DestinationFilename>%Config%\Auto3D\Epson.xml</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\Auto3D-Panasonic\bin\Debug\Auto3D-Panasonic.dll</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{198d0c2f-3176-47fa-87c0-c3137e4eafda}-Auto3D-Panasonic.dll</ZipFileName>
+        <DestinationFilename>%Plugins%\Process\Auto3D\Auto3D-Panasonic.dll</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\Auto3D-Panasonic\Panasonic.xml</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{694e4278-156d-4a86-8362-cdf908409b27}-VIErA.cfg</ZipFileName>
+        <DestinationFilename>%Config%\Auto3D\Panasonic.xml</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\Auto3D-LG\bin\Debug\Auto3D-LG.dll</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{a6284051-3ca9-4740-9fc6-eaacc23d049e}-Auto3D-LG.dll</ZipFileName>
+        <DestinationFilename>%Plugins%\Process\Auto3D\Auto3D-LG.dll</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\Auto3D-LG\LG.xml</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{433b4b67-1b3b-4f11-92bb-c423c0998e9e}-LG.xml</ZipFileName>
+        <DestinationFilename>%Config%\Auto3D\LG.xml</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\Externals\websocket-sharp.dll</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{f5f00c7e-c929-465c-808b-59c446eb4316}-websocket-sharp.dll</ZipFileName>
+        <DestinationFilename>%Plugins%\Process\Auto3D\websocket-sharp.dll</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\Auto3D-Optoma\bin\Debug\Auto3D-Optoma.dll</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{d9e5bcde-cf7e-4d81-b98a-691ae9e76b51}-Auto3D-Optoma.dll</ZipFileName>
+        <DestinationFilename>%Plugins%\Process\Auto3D\Auto3D-Optoma.dll</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\Auto3D-Optoma\Optoma.xml</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{aa7daa25-e2b7-4624-ad9e-862f615817ea}-Optoma.xml</ZipFileName>
+        <DestinationFilename>%Config%\Auto3D\Optoma.xml</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\Auto3D-SonyVP\bin\Debug\Auto3D-SonyVP.dll</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{43216408-9f8b-4140-a7ae-7d911db7ad51}-Auto3D-SonyVP.dll</ZipFileName>
+        <DestinationFilename>%Plugins%\Process\Auto3D\Auto3D-SonyVP.dll</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\Auto3D-SonyVP\SonyVP.xml</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{5cb9dee4-fb82-435b-940a-67f8d0ac307e}-SonyVP.xml</ZipFileName>
+        <DestinationFilename>%Config%\Auto3D\SonyVP.xml</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\Externals\Newtonsoft.Json.dll</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{dd76f1ad-b794-424c-8192-ef402e4144e6}-Newtonsoft.Json.dll</ZipFileName>
+        <DestinationFilename>%Plugins%\Process\Auto3D\Newtonsoft.Json.dll</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\Auto3D-GenericDevice\bin\Debug\Auto3D-GenericDevice.dll</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{4b8bd6cf-4730-485e-accb-10881e2219a0}-Auto3D-GenericDevice.dll</ZipFileName>
+        <DestinationFilename>%Plugins%\Process\Auto3D\Auto3D-GenericDevice.dll</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\Auto3D-GenericDevice\Generic-IR.xml</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{3d6904e0-312c-4e21-b1a2-2aa35584a8bc}-Generic-IR.xml</ZipFileName>
+        <DestinationFilename>%Config%\Auto3D\Generic-IR.xml</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\Auto3D-SharpLibDisplay\bin\Debug\Auto3D-SharpLibDisplay.dll</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{3b48b660-3526-4461-8312-b60cb2024b9d}-Auto3D-SharpLibDisplay.dll</ZipFileName>
+        <DestinationFilename>%Plugins%\Process\Auto3D\Auto3D-SharpLibDisplay.dll</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\Auto3D-SharpLibDisplay\bin\Debug\SharpLibDisplay.dll</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{3bce5bef-4808-4870-b09f-335b3f852e1f}-SharpLibDisplay.dll</ZipFileName>
+        <DestinationFilename>%Base%\SharpLibDisplay.dll</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\Auto3D-SharpLibDisplay\SharpLibDisplay.xml</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{b2faef83-e155-4bc1-8053-b3b8c41abd40}-SharpLibDisplay.xml</ZipFileName>
+        <DestinationFilename>%Config%\Auto3D\SharpLibDisplay.xml</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="true" Modified="true">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\Auto3D\Auto3d-Icon2.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{b8b3ec83-8613-4e07-8add-6d350c7d939a}-Auto3d-Icon2.png</ZipFileName>
+        <DestinationFilename />
+      </FileItem>
+    </Items>
+  </UniqueFileList>
+  <ProjectSettings>
+    <FolderGroups />
+    <ProjectFilename>Auto3D.xmp2</ProjectFilename>
+    <UpdatePath1 />
+    <UpdatePath2 />
+    <UpdatePath3 />
+  </ProjectSettings>
+  <IsSkin>false</IsSkin>
+</PackageClass>

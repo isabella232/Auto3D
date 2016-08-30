@@ -60,11 +60,8 @@ namespace MediaPortal.ProcessPlugins.Auto3D.Devices
         {
             using (Settings reader = new MPSettings())
             {
-                //IrPortName = reader.GetValueAsString("Auto3DPlugin", "GenericDevicePort", "None");
-                //AllowIrCommandsForAllDevices = reader.GetValueAsBool("Auto3DPlugin", "AllowIrCommandsForAllDevices", false);
-                //IPAddress = reader.GetValueAsString("Auto3DPlugin", "GenericDeviceIPAddress", "");
-                //MAC = reader.GetValueAsString("Auto3DPlugin", "GenericDeviceMAC", "00-00-00-00-00-00");
-                //PingCheck = reader.GetValueAsBool("Auto3DPlugin", "GenericDevicePingCheck", false);
+                // Not having this results in us trying to use a null pointer when opening the 3D selection dialog
+                DeviceModelName = reader.GetValueAsString("Auto3DPlugin", "SharpLibDisplayModel", "SharpLibDisplay");
             }
         }
 
@@ -72,11 +69,8 @@ namespace MediaPortal.ProcessPlugins.Auto3D.Devices
         {
             using (Settings writer = new MPSettings())
             {
-                //writer.SetValue("Auto3DPlugin", "GenericDevicePort", IrPortName);
-                //writer.SetValueAsBool("Auto3DPlugin", "AllowIrCommandsForAllDevices", AllowIrCommandsForAllDevices);
-                //writer.SetValue("Auto3DPlugin", "GenericDeviceIPAddress", IPAddress);
-                //writer.SetValue("Auto3DPlugin", "GenericDeviceMAC", MAC);
-                //writer.SetValueAsBool("Auto3DPlugin", "GenericDevicePingCheck", PingCheck);
+                // Not having this results in us trying to use a null pointer when opening the 3D selection dialog
+                writer.SetValue("Auto3DPlugin", "SharpLibDisplayModel", SelectedDeviceModel.Name);
             }
         }
 
