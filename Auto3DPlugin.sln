@@ -25,6 +25,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Auto3D-SonyVP", "Auto3D-Son
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Auto3D-GenericDevice", "Auto3D-GenericDevice\Auto3D-GenericDevice.csproj", "{CBC9CF1D-EE07-4345-A03E-46E73F74BB0C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Auto3D-SharpLibDisplay", "Auto3D-SharpLibDisplay\Auto3D-SharpLibDisplay.csproj", "{A107DDA2-5A3B-4D35-A261-C77CE20A85E7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -167,6 +169,18 @@ Global
 		{CBC9CF1D-EE07-4345-A03E-46E73F74BB0C}.Release|Mixed Platforms.Build.0 = Release|x86
 		{CBC9CF1D-EE07-4345-A03E-46E73F74BB0C}.Release|x86.ActiveCfg = Release|x86
 		{CBC9CF1D-EE07-4345-A03E-46E73F74BB0C}.Release|x86.Build.0 = Release|x86
+		{A107DDA2-5A3B-4D35-A261-C77CE20A85E7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A107DDA2-5A3B-4D35-A261-C77CE20A85E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A107DDA2-5A3B-4D35-A261-C77CE20A85E7}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{A107DDA2-5A3B-4D35-A261-C77CE20A85E7}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{A107DDA2-5A3B-4D35-A261-C77CE20A85E7}.Debug|x86.ActiveCfg = Debug|x86
+		{A107DDA2-5A3B-4D35-A261-C77CE20A85E7}.Debug|x86.Build.0 = Debug|x86
+		{A107DDA2-5A3B-4D35-A261-C77CE20A85E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A107DDA2-5A3B-4D35-A261-C77CE20A85E7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A107DDA2-5A3B-4D35-A261-C77CE20A85E7}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{A107DDA2-5A3B-4D35-A261-C77CE20A85E7}.Release|Mixed Platforms.Build.0 = Release|x86
+		{A107DDA2-5A3B-4D35-A261-C77CE20A85E7}.Release|x86.ActiveCfg = Release|x86
+		{A107DDA2-5A3B-4D35-A261-C77CE20A85E7}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

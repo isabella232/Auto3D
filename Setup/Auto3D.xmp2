@@ -323,6 +323,37 @@
           </Items>
         </Files>
       </GroupItem>
+      <GroupItem Name="SharpLibDisplay">
+        <ParentGroup />
+        <DisplayName>SharpLibDisplay</DisplayName>
+        <DefaulChecked>true</DefaulChecked>
+        <Description>SharpLibDisplay</Description>
+        <Files>
+          <Items>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\Auto3D-SharpLibDisplay\bin\Release\Auto3D-SharpLibDisplay.dll</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{3b48b660-3526-4461-8312-b60cb2024b9d}-Auto3D-SharpLibDisplay.dll</ZipFileName>
+              <DestinationFilename>%Plugins%\Process\Auto3D\Auto3D-SharpLibDisplay.dll</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\Auto3D-SharpLibDisplay\bin\Release\SharpLibDisplay.dll</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{3bce5bef-4808-4870-b09f-335b3f852e1f}-SharpLibDisplay.dll</ZipFileName>
+              <DestinationFilename>%Base%\SharpLibDisplay.dll</DestinationFilename>
+            </FileItem>
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
+              <Param1 />
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\Auto3D-SharpLibDisplay\SharpLibDisplay.xml</LocalFileName>
+              <ZipFileName>Installer{CopyFile}\{b2faef83-e155-4bc1-8053-b3b8c41abd40}-SharpLibDisplay.xml</ZipFileName>
+              <DestinationFilename>%Config%\Auto3D\SharpLibDisplay.xml</DestinationFilename>
+            </FileItem>
+          </Items>
+        </Files>
+      </GroupItem>
     </Items>
   </Groups>
   <Sections>
@@ -482,7 +513,7 @@ Click Next to continue or Cancel to exit Setup.</Value>
     <Version>
       <Major>1</Major>
       <Minor>15</Minor>
-      <Build>0</Build>
+      <Build>1</Build>
       <Revision>0</Revision>
     </Version>
     <ExtensionDescription />
@@ -736,11 +767,32 @@ Click Next to continue or Cancel to exit Setup.</Value>
         <ZipFileName>Installer{CopyFile}\{3d6904e0-312c-4e21-b1a2-2aa35584a8bc}-Generic-IR.xml</ZipFileName>
         <DestinationFilename>%Config%\Auto3D\Generic-IR.xml</DestinationFilename>
       </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\Auto3D-SharpLibDisplay\bin\Release\Auto3D-SharpLibDisplay.dll</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{3b48b660-3526-4461-8312-b60cb2024b9d}-Auto3D-SharpLibDisplay.dll</ZipFileName>
+        <DestinationFilename>%Plugins%\Process\Auto3D\Auto3D-SharpLibDisplay.dll</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\Auto3D-SharpLibDisplay\bin\Release\SharpLibDisplay.dll</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{3bce5bef-4808-4870-b09f-335b3f852e1f}-SharpLibDisplay.dll</ZipFileName>
+        <DestinationFilename>%Base%\SharpLibDisplay.dll</DestinationFilename>
+      </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\Auto3D-SharpLibDisplay\SharpLibDisplay.xml</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{b2faef83-e155-4bc1-8053-b3b8c41abd40}-SharpLibDisplay.xml</ZipFileName>
+        <DestinationFilename>%Config%\Auto3D\SharpLibDisplay.xml</DestinationFilename>
+      </FileItem>
       <FileItem InstallType="CopyFile" SystemFile="true" Modified="true">
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
         <LocalFileName>..\Auto3D\Auto3d-Icon2.png</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{5f24b72c-0486-4fc4-ac5c-d12e6d0035b4}-Auto3d-Icon2.png</ZipFileName>
+        <ZipFileName>Installer{CopyFile}\{b8b3ec83-8613-4e07-8add-6d350c7d939a}-Auto3d-Icon2.png</ZipFileName>
         <DestinationFilename />
       </FileItem>
     </Items>
