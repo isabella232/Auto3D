@@ -49,6 +49,18 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Common.Utils, Version=1.15.0.26, Culture=neutral, processorArchitecture=x86">
+      <HintPath>..\packages\MediaPortal.MP1.Plugin.1.15.0\lib\net40\Common.Utils.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Core, Version=1.15.0.26, Culture=neutral, processorArchitecture=x86">
+      <HintPath>..\packages\MediaPortal.MP1.Plugin.1.15.0\lib\net40\Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Dialogs, Version=1.15.0.26, Culture=neutral, processorArchitecture=x86">
+      <HintPath>..\packages\MediaPortal.MP1.Plugin.1.15.0\lib\net40\Dialogs.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -57,6 +69,10 @@
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="Utils, Version=1.15.0.26, Culture=neutral, processorArchitecture=x86">
+      <HintPath>..\packages\MediaPortal.MP1.Plugin.1.15.0\lib\net40\Utils.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="iRemoteWrapper\HttpDownloader.cs" />
@@ -83,6 +99,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <None Include="packages.config" />
     <None Include="SamsungTV.png" />
   </ItemGroup>
   <ItemGroup>
@@ -98,18 +115,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\MediaPortal-1\Common-MP-TVE3\Common.Utils\Common.Utils.csproj">
-      <Project>{f6eda1f3-3dcd-43f4-8a90-e32da70c8227}</Project>
-      <Name>Common.Utils</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\MediaPortal-1\mediaportal\Core\Core.csproj">
-      <Project>{02fffc1f-2555-4b99-8b01-3432d0673855}</Project>
-      <Name>Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\MediaPortal-1\mediaportal\Utils\Utils.csproj">
-      <Project>{6da0e4df-6230-4642-98b5-e690bb6942bb}</Project>
-      <Name>Utils</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Auto3D-BaseDevice\Auto3D-Base.csproj">
       <Project>{6b4550e5-a499-4037-98b7-dea95949c6b2}</Project>
       <Name>Auto3D-Base</Name>
