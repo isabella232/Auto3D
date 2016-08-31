@@ -44,16 +44,16 @@ namespace MediaPortal.ProcessPlugins.Auto3D.Devices
         public override void Start()
         {
             base.Start();
-            Client.Open();
-            Client.SetName("Auto3D");
+            //Client.Open();
+            //Client.SetName("Auto3D");
             // We don't want to display anything
-            Client.SetPriority(0); 
+            //Client.SetPriority(0); 
         }
 
         public override void Stop()
         {
             base.Stop();
-            Client.Close();
+            //Client.Close();
         }
 
         public override void LoadSettings()
@@ -78,7 +78,11 @@ namespace MediaPortal.ProcessPlugins.Auto3D.Devices
         {
             try
             {
+                Client.Open();
+                Client.SetName("Auto3D");
+                Client.SetPriority(0);
                 Client.TriggerEventsByName(rc.Command);
+                Client.Close();
                 Log.Info("Auto3D: Trigger Event: " + rc.Command);
             }
             catch (Exception ex)
