@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="labelExplainations.Text" xml:space="preserve">
-    <value>You should not have to configure anything in here.
+    <value>You should not have to configure much in here.
 Just head to Sharp Display Manager and create 
 User Events. You will need one for each transition
 you want to support. Make sure you name your
@@ -126,5 +126,12 @@ events as shown in here, for instance:
 2D&gt;3DSBS
 3DSBS&gt;2D
 </value>
+  </data>
+  <data name="label1.Text" xml:space="preserve">
+    <value>You should remove the commands for the modes
+you are not planning to support. You can always
+add them later using the above buttons.
+Removing them will prevent the corresponding
+options to show up in your 3D selection menu.</value>
   </data>
 </root>
