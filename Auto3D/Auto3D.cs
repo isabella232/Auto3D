@@ -18,7 +18,7 @@ using System.Threading.Tasks;
 
 using Microsoft.Win32;
 using MediaPortal.ProcessPlugins.Auto3D.UPnP;
- 
+
 namespace MediaPortal.ProcessPlugins.Auto3D
 {
   [PluginIcons("MediaPortal.ProcessPlugins.Auto3D.Auto3d-Icon2.png", "MediaPortal.ProcessPlugins.Auto3D.Auto3d-Icon2Disabled.png")]
@@ -29,18 +29,21 @@ namespace MediaPortal.ProcessPlugins.Auto3D
     [Flags]
     private enum MatchingVideoFormat
     {
-        Simple2D = 0,
-        SydeBySide3D = 1, 
-        TopBottom3D = 2, 
-        Convert2DTo3D = 4,
-        Reverse = 8,
-        SydeBySide3DReverse = SydeBySide3D | Reverse,
-        TopBottom3DReverse = TopBottom3D | Reverse
+      Simple2D = 0,
+      SydeBySide3D = 1,
+      TopBottom3D = 2,
+      Convert2DTo3D = 4,
+      Reverse = 8,
+      SydeBySide3DReverse = SydeBySide3D | Reverse,
+      TopBottom3DReverse = TopBottom3D | Reverse
     }
 
     private volatile bool _run;
     private volatile bool _bPlaying;
 
+    /// <summary>
+    /// TODO: At some point we need to distinguish between the current format and the format of the playing stream.
+    /// </summary>
     VideoFormat _currentMode = VideoFormat.Fmt2D; // default
     VideoFormat _nameFormat = VideoFormat.Fmt3DSBS; // default
 
@@ -71,13 +74,13 @@ namespace MediaPortal.ProcessPlugins.Auto3D
     bool bConvert3DTo2D = false;
 
     bool bTurnDeviceOff = false;
-	int  nTurnDeviceOffVia = 0;
-    int  nTurnDeviceOffWhen = 0;
+    int nTurnDeviceOffVia = 0;
+    int nTurnDeviceOffWhen = 0;
 
-	bool bTurnDeviceOn = false;
-	int  nTurnDeviceOnVia = 0;
-	int  nTurnDeviceOnWhen = 0;
-	
+    bool bTurnDeviceOn = false;
+    int nTurnDeviceOnVia = 0;
+    int nTurnDeviceOnWhen = 0;
+
     bool bConvert2Dto3DEnabled = false;
 
     Thread _workerThread = null;
@@ -92,11 +95,11 @@ namespace MediaPortal.ProcessPlugins.Auto3D
     eSubTitle subTitleType = eSubTitle.None;
     bool bStretchSubtitles = false;
 
-	public Auto3D()
+    public Auto3D()
     {
       Auto3DUPnP.Init();
 
-	  // add new instances of all existing devices here...
+      // add new instances of all existing devices here...
 
       _listDevices.Add(new NoDevice());
 
@@ -128,7 +131,7 @@ namespace MediaPortal.ProcessPlugins.Auto3D
             }
           }
         }
-      }     
+      }
     }
 
     // Returns the name of the plugin which is shown in the plugin menu
@@ -224,15 +227,15 @@ namespace MediaPortal.ProcessPlugins.Auto3D
         b3DMenuOnKey = reader.GetValueAsBool("Auto3DPlugin", "3DMenuOnKey", false);
         String menuHotKey = reader.GetValueAsString("Auto3DPlugin", "3DMenuKey", "CTRL + D");
 
-		if (menuHotKey.StartsWith("MCE")) // reject old configs
-			menuHotKey = "";
+        if (menuHotKey.StartsWith("MCE")) // reject old configs
+          menuHotKey = "";
 
         if (menuHotKey.StartsWith("HID"))
         {
           bMenuMCERemote = true;
           mceRemoteKey = menuHotKey;
 
-		  HIDInput.getInstance().HidEvent += Auto3DSetup_HidEvent;		
+          HIDInput.getInstance().HidEvent += Auto3DSetup_HidEvent;
         }
         else
         {
@@ -280,7 +283,7 @@ namespace MediaPortal.ProcessPlugins.Auto3D
         _activeDevice.Start();
 
         if (_activeDevice is Auto3DUPnPBaseDevice)
-            Auto3DUPnP.StartSSDP();
+          Auto3DUPnP.StartSSDP();
 
         if (b3DMenuOnKey)
         {
@@ -289,106 +292,106 @@ namespace MediaPortal.ProcessPlugins.Auto3D
 
         GUIGraphicsContext.Render3DSubtitle = reader.GetValueAsBool("Auto3DPlugin", "3DSubtitles", true);
         GUIGraphicsContext.Render3DSubtitleDistance = -reader.GetValueAsInt("Auto3DPlugin", "SubtitleDepth", 0);
-        
+
         bConvert2Dto3DEnabled = reader.GetValueAsBool("Auto3DPlugin", "ConvertTo3D", false);
         GUIGraphicsContext.Convert2Dto3DSkewFactor = reader.GetValueAsInt("Auto3DPlugin", "SkewFactor", 10);
-        
+
         bStretchSubtitles = reader.GetValueAsBool("Auto3DPlugin", "StretchSubtitles", false);
 
         bSuppressSwitchBackTo2D = reader.GetValueAsBool("Auto3DPlugin", "SupressSwitchBackTo2D", false);
         bConvert3DTo2D = reader.GetValueAsBool("Auto3DPlugin", "Convert3DTo2D", false);
-        
+
         SplitKeywords(ref _keywordsSBS, reader.GetValueAsString("Auto3DPlugin", "SwitchSBSLabels", "\"3DSBS\", \"3D SBS\""));
         SplitKeywords(ref _keywordsSBSR, reader.GetValueAsString("Auto3DPlugin", "SwitchSBSRLabels", "\"3DSBSR\", \"3D SBS R\""));
         SplitKeywords(ref _keywordsTAB, reader.GetValueAsString("Auto3DPlugin", "SwitchTABLabels", "\"3DTAB\", \"3D TAB\""));
         SplitKeywords(ref _keywordsTABR, reader.GetValueAsString("Auto3DPlugin", "SwitchTABRLabels", "\"3DTABR\", \"3D TAB R\""));
 
         bTurnDeviceOff = reader.GetValueAsBool("Auto3DPlugin", "TurnDeviceOff", false);
-		nTurnDeviceOffVia = reader.GetValueAsInt("Auto3DPlugin", "TurnDeviceOffVia", 0);
+        nTurnDeviceOffVia = reader.GetValueAsInt("Auto3DPlugin", "TurnDeviceOffVia", 0);
         nTurnDeviceOffWhen = reader.GetValueAsInt("Auto3DPlugin", "TurnDeviceOffWhen", 0);
 
-		bTurnDeviceOn = reader.GetValueAsBool("Auto3DPlugin", "TurnDeviceOn", false);
-		nTurnDeviceOnVia = reader.GetValueAsInt("Auto3DPlugin", "TurnDeviceOnVia", 0);
+        bTurnDeviceOn = reader.GetValueAsBool("Auto3DPlugin", "TurnDeviceOn", false);
+        nTurnDeviceOnVia = reader.GetValueAsInt("Auto3DPlugin", "TurnDeviceOnVia", 0);
         nTurnDeviceOnWhen = reader.GetValueAsInt("Auto3DPlugin", "TurnDeviceOnWhen", 0);
       }
 
-      SystemEvents.PowerModeChanged += SystemEvents_PowerModeChanged;      
-      SystemEvents.SessionEnding += SystemEvents_SessionEnding;	  
+      SystemEvents.PowerModeChanged += SystemEvents_PowerModeChanged;
+      SystemEvents.SessionEnding += SystemEvents_SessionEnding;
       GUIGraphicsContext.OnNewAction += GUIGraphicsContext_OnNewAction;
 
-	  if (bTurnDeviceOff && (nTurnDeviceOnWhen == 0 || nTurnDeviceOnWhen == 2) && _activeDevice.GetTurnOffInterfaces() != DeviceInterface.None)
-		  _activeDevice.TurnOn((DeviceInterface)nTurnDeviceOnVia);
+      if (bTurnDeviceOff && (nTurnDeviceOnWhen == 0 || nTurnDeviceOnWhen == 2) && _activeDevice.GetTurnOffInterfaces() != DeviceInterface.None)
+        _activeDevice.TurnOn((DeviceInterface)nTurnDeviceOnVia);
     }
 
     // system was shut down through MediaPortal GUI
 
     void GUIGraphicsContext_OnNewAction(GUI.Library.Action action)
     {
-        if (action.wID == GUI.Library.Action.ActionType.ACTION_SHUTDOWN && 
-            GUIGraphicsContext.CurrentState == GUIGraphicsContext.State.STOPPING)
-        {
-            Log.Debug("Auto3D: MediaPortal ShutDown");
+      if (action.wID == GUI.Library.Action.ActionType.ACTION_SHUTDOWN &&
+          GUIGraphicsContext.CurrentState == GUIGraphicsContext.State.STOPPING)
+      {
+        Log.Debug("Auto3D: MediaPortal ShutDown");
 
-            SystemShutDown();
-        }
+        SystemShutDown();
+      }
     }
 
     // system was shut down through Windows GUI
 
     void SystemEvents_SessionEnding(object sender, SessionEndingEventArgs e)
     {
-        Log.Debug("Auto3D: SessionEnding");
+      Log.Debug("Auto3D: SessionEnding");
 
-        if (e.Reason == SessionEndReasons.SystemShutdown)
-        {
-            SystemShutDown();
-        }
+      if (e.Reason == SessionEndReasons.SystemShutdown)
+      {
+        SystemShutDown();
+      }
     }
 
     private void SystemShutDown()
     {
-        Log.Debug("Auto3D: SystemShutDown");
+      Log.Debug("Auto3D: SystemShutDown");
 
-        if (bTurnDeviceOff && (nTurnDeviceOffWhen == 1 || nTurnDeviceOffWhen == 2) && _activeDevice.GetTurnOffInterfaces() != DeviceInterface.None)
-        {
-            Log.Debug("Auto3D: Turn TV off");
+      if (bTurnDeviceOff && (nTurnDeviceOffWhen == 1 || nTurnDeviceOffWhen == 2) && _activeDevice.GetTurnOffInterfaces() != DeviceInterface.None)
+      {
+        Log.Debug("Auto3D: Turn TV off");
 
-			_activeDevice.TurnOff((DeviceInterface)nTurnDeviceOffVia);
-        }
+        _activeDevice.TurnOff((DeviceInterface)nTurnDeviceOffVia);
+      }
     }
 
     void SystemEvents_PowerModeChanged(object sender, PowerModeChangedEventArgs e)
     {
-        Log.Debug("Auto3D: PowerModeChanged");
+      Log.Debug("Auto3D: PowerModeChanged");
 
-        switch (e.Mode)
-        {
-            case PowerModes.Suspend:
+      switch (e.Mode)
+      {
+        case PowerModes.Suspend:
 
-                if (bTurnDeviceOff && (nTurnDeviceOffWhen == 0 || nTurnDeviceOffWhen == 2) && _activeDevice.GetTurnOffInterfaces() != DeviceInterface.None)
-                {
-                    Log.Debug("Auto3D: Trying to turn TV off");
-                    _activeDevice.TurnOff((DeviceInterface)nTurnDeviceOffVia);
-                }
+          if (bTurnDeviceOff && (nTurnDeviceOffWhen == 0 || nTurnDeviceOffWhen == 2) && _activeDevice.GetTurnOffInterfaces() != DeviceInterface.None)
+          {
+            Log.Debug("Auto3D: Trying to turn TV off");
+            _activeDevice.TurnOff((DeviceInterface)nTurnDeviceOffVia);
+          }
 
-                _activeDevice.Suspend();
-                break;
+          _activeDevice.Suspend();
+          break;
 
-            case PowerModes.Resume:
+        case PowerModes.Resume:
 
-				_activeDevice.Resume();
+          _activeDevice.Resume();
 
-				if (bTurnDeviceOn && (nTurnDeviceOnWhen == 1 || nTurnDeviceOnWhen == 2) && _activeDevice.GetTurnOnInterfaces() != DeviceInterface.None)
-				{
-					Log.Debug("Auto3D: Trying to turn TV on");
-					_activeDevice.TurnOn((DeviceInterface)nTurnDeviceOnVia);
-				}
+          if (bTurnDeviceOn && (nTurnDeviceOnWhen == 1 || nTurnDeviceOnWhen == 2) && _activeDevice.GetTurnOnInterfaces() != DeviceInterface.None)
+          {
+            Log.Debug("Auto3D: Trying to turn TV on");
+            _activeDevice.TurnOn((DeviceInterface)nTurnDeviceOnVia);
+          }
 
-				// after resume we are always in 2D mode because normally the TV has 2D configuration after turning it on...
-				GUIGraphicsContext.Render3DMode = GUIGraphicsContext.eRender3DMode.None;
-				_currentMode = VideoFormat.Fmt2D;
-				break;
-        }
+          // after resume we are always in 2D mode because normally the TV has 2D configuration after turning it on...
+          GUIGraphicsContext.Render3DMode = GUIGraphicsContext.eRender3DMode.None;
+          _currentMode = VideoFormat.Fmt2D;
+          break;
+      }
     }
 
     void SplitKeywords(ref List<String> list, String keywords)
@@ -397,7 +400,7 @@ namespace MediaPortal.ProcessPlugins.Auto3D
 
       foreach (String keyword in split)
       {
-          list.Add(keyword.Trim("\" ".ToCharArray()));
+        list.Add(keyword.Trim("\" ".ToCharArray()));
       }
     }
 
@@ -413,28 +416,28 @@ namespace MediaPortal.ProcessPlugins.Auto3D
         if (_dlgMenu == null && e.KeyValue == (int)_menuHotKey)
         {
           Log.Info("Auto3D: Manual Mode via Hotkey");
-          ManualSelect3DFormat(VideoFormat.Fmt2D);
+          ManualSelect3DFormat(_currentMode);
           UpdateSubtitleRenderFormat();
         }
       }
     }
 
-	bool Auto3DSetup_HidEvent(object aSender, String key)
-	{
-		if (key == mceRemoteKey)
-		{
-			if (_dlgMenu == null)
-				ManualSelectThread();
-			else
-			{
-				_dlgMenu.PageDestroy();
-			}
+    bool Auto3DSetup_HidEvent(object aSender, String key)
+    {
+      if (key == mceRemoteKey)
+      {
+        if (_dlgMenu == null)
+          ManualSelectThread();
+        else
+        {
+          _dlgMenu.PageDestroy();
+        }
 
-			return true;
-		}
+        return true;
+      }
 
-		return false;
-	}
+      return false;
+    }
 
     [DllImport("user32.dll")]
     static extern int GetSystemMetrics(int smIndex);
@@ -450,7 +453,7 @@ namespace MediaPortal.ProcessPlugins.Auto3D
       Log.Debug("Auto3D: Stop - MePoPowerOff = " + GUIGraphicsContext.StoppingToPowerOff);
 
       if (bShutDownPending || GUIGraphicsContext.StoppingToPowerOff)
-          SystemShutDown();     
+        SystemShutDown();
 
       // stop UPnP
       Auto3DUPnP.StopSSDP();
@@ -458,17 +461,17 @@ namespace MediaPortal.ProcessPlugins.Auto3D
       _run = false;
       _activeDevice.Stop();
 
-	  if (bMenuMCERemote)
-	  {
-		  HIDInput.getInstance().HidEvent -= Auto3DSetup_HidEvent;
-	  }
+      if (bMenuMCERemote)
+      {
+        HIDInput.getInstance().HidEvent -= Auto3DSetup_HidEvent;
+      }
 
       if (!bSuppressSwitchBackTo2D)
         GUIGraphicsContext.Render3DMode = GUIGraphicsContext.eRender3DMode.None;
 
-	  g_Player.PlayBackEnded -= OnVideoEnded;
-	  g_Player.PlayBackStopped -= OnVideoStopped;
-	  g_Player.PlayBackStarted -= OnVideoStarted;
+      g_Player.PlayBackEnded -= OnVideoEnded;
+      g_Player.PlayBackStopped -= OnVideoStopped;
+      g_Player.PlayBackStarted -= OnVideoStarted;
 
       SystemEvents.PowerModeChanged -= SystemEvents_PowerModeChanged;
     }
@@ -499,7 +502,7 @@ namespace MediaPortal.ProcessPlugins.Auto3D
         }
 
         System.Drawing.Bitmap image = fg.GetCurrentImage();
-          
+
         if (image != null)
         {
           Bitmap fastCompareImage = new Bitmap(96, 96);
@@ -523,7 +526,7 @@ namespace MediaPortal.ProcessPlugins.Auto3D
           vf[iStep] = VideoFormat.Fmt2D; // assume normal format
 
           if (bCheckSideBySide)
-              similarity = Auto3DAnalyzer.CheckFor3DFormat(bmpData, bmpData.Width / 2, bmpData.Height, true);
+            similarity = Auto3DAnalyzer.CheckFor3DFormat(bmpData, bmpData.Width / 2, bmpData.Height, true);
 
           if (similarity == -1) // not bright enough for analysis
             continue;
@@ -631,6 +634,8 @@ namespace MediaPortal.ProcessPlugins.Auto3D
             }
             else
             {
+              //SL: Not sure why we want to go manual here?
+              // Is it because we could not workout the format?
               ManualSelect3DFormat(videoFormat);
               UpdateSubtitleRenderFormat();
             }
@@ -639,41 +644,41 @@ namespace MediaPortal.ProcessPlugins.Auto3D
           }
           else
             if ((_currentMode == VideoFormat.Fmt2D) && ((countNormal > countSideBySide3D + treshold) || (countNormal > countTopBottom3D + treshold)))
-            {
-              // current format is normal and video is normal too, we do not need to switch
-              Log.Info("Auto3D: Format is 2D. No switch necessary");
-              return; // exit thread
-            }
-            else
+          {
+            // current format is normal and video is normal too, we do not need to switch
+            Log.Info("Auto3D: Format is 2D. No switch necessary");
+            return; // exit thread
+          }
+          else
               if (_currentMode != VideoFormat.Fmt2D)
-              {
-                // current format 3d and video is 2d, so we must switch back to normal
-                RunSwitchBack();
-                return; // exit thread
-              }
-              else
+          {
+            // current format 3d and video is 2d, so we must switch back to normal
+            RunSwitchBack();
+            return; // exit thread
+          }
+          else
                 if (iStep > maxAnalyzeSteps)
-                {
-                  // we could not make a decision within the maximum allowed steps
-                  Log.Info("Auto3D: Video Analysis failed!");
-                  return; // exit thread
-                }
+          {
+            // we could not make a decision within the maximum allowed steps
+            Log.Info("Auto3D: Video Analysis failed!");
+            return; // exit thread
+          }
         }
 
         iStep++;
       }
     }
 
-   private void UpdateSubtitleRenderFormat()
+    private void UpdateSubtitleRenderFormat()
     {
-        if (bStretchSubtitles)
-        {
-            GUIGraphicsContext.StretchSubtitles = true;
-        }
-        else
-        {
-            GUIGraphicsContext.StretchSubtitles = subTitleType == eSubTitle.ImageBased ? true : false;
-        }       
+      if (bStretchSubtitles)
+      {
+        GUIGraphicsContext.StretchSubtitles = true;
+      }
+      else
+      {
+        GUIGraphicsContext.StretchSubtitles = subTitleType == eSubTitle.ImageBased ? true : false;
+      }
     }
 
     private void AnalyzeVideo()
@@ -692,7 +697,7 @@ namespace MediaPortal.ProcessPlugins.Auto3D
       {
         _currentMode = VideoFormat.Fmt2D;
         GUIGraphicsContext.Render3DMode = GUIGraphicsContext.eRender3DMode.None;
-        GUIGraphicsContext.Switch3DSides = false;        
+        GUIGraphicsContext.Switch3DSides = false;
       }
     }
 
@@ -708,7 +713,7 @@ namespace MediaPortal.ProcessPlugins.Auto3D
     private void RunManualSwitch()
     {
       Log.Info("Auto3D: Manual Mode via Remote");
-      ManualSelect3DFormat(VideoFormat.Fmt2D);
+      ManualSelect3DFormat(_currentMode);
     }
 
     private void ManualSelectThread()
@@ -738,24 +743,24 @@ namespace MediaPortal.ProcessPlugins.Auto3D
       }
     }
 
-      private static VideoFormat ConvertMatchingFormatToVideoFormat(MatchingVideoFormat source)
+    private static VideoFormat ConvertMatchingFormatToVideoFormat(MatchingVideoFormat source)
+    {
+      switch (source)
       {
-        switch (source)
-        {
-          case MatchingVideoFormat.Simple2D:
-            return VideoFormat.Fmt2D;
-          case MatchingVideoFormat.SydeBySide3D:
-          case MatchingVideoFormat.SydeBySide3DReverse:
-            return VideoFormat.Fmt3DSBS;
-          case MatchingVideoFormat.TopBottom3D:
-          case MatchingVideoFormat.TopBottom3DReverse:
-            return VideoFormat.Fmt3DTAB;
-          case MatchingVideoFormat.Convert2DTo3D:
-            return VideoFormat.Fmt2D3D;
-        }
-
-        return VideoFormat.Fmt2D;
+        case MatchingVideoFormat.Simple2D:
+          return VideoFormat.Fmt2D;
+        case MatchingVideoFormat.SydeBySide3D:
+        case MatchingVideoFormat.SydeBySide3DReverse:
+          return VideoFormat.Fmt3DSBS;
+        case MatchingVideoFormat.TopBottom3D:
+        case MatchingVideoFormat.TopBottom3DReverse:
+          return VideoFormat.Fmt3DTAB;
+        case MatchingVideoFormat.Convert2DTo3D:
+          return VideoFormat.Fmt2D3D;
       }
+
+      return VideoFormat.Fmt2D;
+    }
 
     private void Analyze3DFormatVideo(g_Player.MediaType type)
     {
@@ -844,19 +849,19 @@ namespace MediaPortal.ProcessPlugins.Auto3D
                 var detectedFormat = MatchingVideoFormat.Simple2D;
                 if (!string.IsNullOrEmpty(keyword))
                 {
-                    if (!matchedKeywords.TryGetValue(keyword, out detectedFormat))
-                    {
-                        Log.Info("Auto3D: not matched key for keyword \"{0}\" and 3D format is going to default {1}", keyword, detectedFormat);
-                        detectedFormat = MatchingVideoFormat.Simple2D;
-                    }
-                    else
-                    {
-                        Log.Info("Auto3D: most matched is \"{0}\" and 3D format is {1}", keyword, detectedFormat);
-                    }
+                  if (!matchedKeywords.TryGetValue(keyword, out detectedFormat))
+                  {
+                    Log.Info("Auto3D: not matched key for keyword \"{0}\" and 3D format is going to default {1}", keyword, detectedFormat);
+                    detectedFormat = MatchingVideoFormat.Simple2D;
+                  }
+                  else
+                  {
+                    Log.Info("Auto3D: most matched is \"{0}\" and 3D format is {1}", keyword, detectedFormat);
+                  }
                 }
                 else
                 {
-                    Log.Info("Auto3D: key is empty and 3D format is going to default {0}", detectedFormat);
+                  Log.Info("Auto3D: key is empty and 3D format is going to default {0}", detectedFormat);
                 }
 
                 var format = ConvertMatchingFormatToVideoFormat(detectedFormat);
@@ -904,126 +909,174 @@ namespace MediaPortal.ProcessPlugins.Auto3D
           {
             Log.Info("Auto3D: Manual Mode");
 
-            ManualSelect3DFormat(VideoFormat.Fmt2D);
+            ManualSelect3DFormat(_currentMode);
             UpdateSubtitleRenderFormat();
             return;
           }
 
           if ((bCheckSideBySide || bCheckTopAndBottom) /* && type == g_Player.MediaType.Video*/)
-            AnalyzeVideo();         
+            AnalyzeVideo();
         }
       }
     }
 
-    public void ManualSelect3DFormat(VideoFormat preSelected)
+    /// <summary>
+    /// 
+    /// </summary>
+    private void AddSwitchSidesOption()
     {
-      _dlgMenu = (GUIDialogMenu)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_MENU);
-
-      if (_dlgMenu != null)
+      if (!GUIGraphicsContext.Switch3DSides)
       {
-        _dlgMenu.Reset();
-        _dlgMenu.SetHeading("Select 2D/3D Format for TV");
+        _dlgMenu.Add("3D Reverse Mode");
+      }
+      else
+      {
+        _dlgMenu.Add("3D Normal Mode");
+      }
+    }
 
-        if (preSelected == VideoFormat.Fmt2D)
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="aCurrentMode"></param>
+    private void PopulateMenu3D(VideoFormat aCurrentMode)
+    {
+      _dlgMenu.Reset();
+      _dlgMenu.SetHeading("Select 2D/3D Format for TV");
+
+      if (aCurrentMode == VideoFormat.Fmt2D)
+      {
+        //We want to provide switch options to supported 3D format
+
+        //
+        if (GUIGraphicsContext.Render3DMode != GUIGraphicsContext.eRender3DMode.None)
+        {
+          //We were in some MediaPortal 2D to 3D conversion mode
+          //Give the user the option to go back to 2D
           _dlgMenu.Add("2D");
+        }
 
-        if (preSelected == VideoFormat.Fmt2D || preSelected == VideoFormat.Fmt3DSBS)
+        if (_activeDevice.IsDefined(VideoFormat.Fmt3DSBS))
         {
           _dlgMenu.Add("3D Side by Side");
           _dlgMenu.Add("3D SBS -> 2D via MediaPortal");
         }
 
-        if (preSelected == VideoFormat.Fmt2D || preSelected == VideoFormat.Fmt3DTAB)
+        if (_activeDevice.IsDefined(VideoFormat.Fmt3DTAB))
         {
           _dlgMenu.Add("3D Top and Bottom");
           _dlgMenu.Add("3D TAB -> 2D via MediaPortal");
         }
-        
-        if (bConvert2Dto3DEnabled && preSelected == VideoFormat.Fmt2D)
-        {
-            _dlgMenu.Add("2D -> 3D SBS via MediaPortal");
-        }
 
-        if (_currentMode == VideoFormat.Fmt3DSBS || _currentMode == VideoFormat.Fmt3DTAB)
+        if (bConvert2Dto3DEnabled)
         {
-          if (!GUIGraphicsContext.Switch3DSides)
-            _dlgMenu.Add("3D Reverse Mode");
-          else
-            _dlgMenu.Add("3D Normal Mode");          
+          _dlgMenu.Add("2D -> 3D SBS via MediaPortal");
         }
 
         if (_activeDevice.IsDefined(VideoFormat.Fmt2D3D))
-          _dlgMenu.Add("2D -> 3D via TV");
-
-        _dlgMenu.DoModal((int)GUIWindow.Window.WINDOW_FULLSCREEN_VIDEO);
-
-        Log.Info("Auto3D: Manually selected " + _dlgMenu.SelectedLabelText);
-
-        switch (_dlgMenu.SelectedLabelText)
         {
-          case "2D":
-
-            _activeDevice.SwitchFormat(_currentMode, VideoFormat.Fmt2D);
-            GUIGraphicsContext.Render3DMode = GUIGraphicsContext.eRender3DMode.None;
-            _currentMode = VideoFormat.Fmt2D;            
-            break;
-
-          case "3D Side by Side":
-
-            _activeDevice.SwitchFormat(_currentMode, VideoFormat.Fmt3DSBS);
-            GUIGraphicsContext.Render3DMode = GUIGraphicsContext.eRender3DMode.SideBySide;
-            _currentMode = VideoFormat.Fmt3DSBS;
-            break;
-
-          case "3D Top and Bottom":
-
-            _activeDevice.SwitchFormat(_currentMode, VideoFormat.Fmt3DTAB);
-            GUIGraphicsContext.Render3DMode = GUIGraphicsContext.eRender3DMode.TopAndBottom;
-            _currentMode = VideoFormat.Fmt3DTAB;
-            break;
-
-          case "2D -> 3D via TV":
-
-            _activeDevice.SwitchFormat(_currentMode, VideoFormat.Fmt2D3D);
-            GUIGraphicsContext.Render3DMode = GUIGraphicsContext.eRender3DMode.None;
-            _currentMode = VideoFormat.Fmt2D3D;
-            break;
-
-          case "3D SBS -> 2D via MediaPortal":
-
-            _activeDevice.SwitchFormat(_currentMode, VideoFormat.Fmt2D);
-            GUIGraphicsContext.Render3DMode = GUIGraphicsContext.eRender3DMode.SideBySideTo2D;
-            _currentMode = VideoFormat.Fmt2D;
-            break;
-
-          case "3D TAB -> 2D via MediaPortal":
-
-            _activeDevice.SwitchFormat(_currentMode, VideoFormat.Fmt2D);
-            GUIGraphicsContext.Render3DMode = GUIGraphicsContext.eRender3DMode.TopAndBottomTo2D;
-            _currentMode = VideoFormat.Fmt2D;
-            break;
-
-          case "3D Reverse Mode":
-
-            GUIGraphicsContext.Switch3DSides = true;
-            break;
-
-          case "3D Normal Mode":
-
-            GUIGraphicsContext.Switch3DSides = false;
-            break;
-          
-          case "2D -> 3D SBS via MediaPortal":
-
-            _activeDevice.SwitchFormat(_currentMode, VideoFormat.Fmt3DSBS);
-            GUIGraphicsContext.Render3DMode = GUIGraphicsContext.eRender3DMode.SideBySideFrom2D;
-            _currentMode = VideoFormat.Fmt3DSBS;
-            break;
+          //2D to 3D Conversion
+          _dlgMenu.Add("2D -> 3D via TV");
+        }
+      }
+      else
+      {
+        //We are in a 3D mode
+        //User need to be able to switch back to 2D
+        _dlgMenu.Add("2D");
+        
+        if (aCurrentMode == VideoFormat.Fmt3DSBS)
+        {
+          // Provide an option to convert to 2D
+          _dlgMenu.Add("3D SBS -> 2D via MediaPortal");
+          // Provide an option to reverse
+          AddSwitchSidesOption();
         }
 
-        _dlgMenu = null;
+        if (aCurrentMode == VideoFormat.Fmt3DTAB)
+        {
+          // Provide an option to convert to 2D
+          _dlgMenu.Add("3D TAB -> 2D via MediaPortal");
+          // Provide an option to reverse
+          AddSwitchSidesOption();
+        }
       }
     }
+
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="aCurrentMode"></param>
+    public void ManualSelect3DFormat(VideoFormat aCurrentMode)
+    {
+      _dlgMenu = (GUIDialogMenu)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_MENU);
+      if (_dlgMenu == null)
+      {
+        return;
+      }
+      PopulateMenu3D(aCurrentMode);
+
+      _dlgMenu.DoModal((int)GUIWindow.Window.WINDOW_FULLSCREEN_VIDEO);
+
+      Log.Info("Auto3D: Manually selected " + _dlgMenu.SelectedLabelText);
+
+      switch (_dlgMenu.SelectedLabelText)
+      {
+        case "2D":
+          _activeDevice.SwitchFormat(_currentMode, VideoFormat.Fmt2D);
+          GUIGraphicsContext.Render3DMode = GUIGraphicsContext.eRender3DMode.None;
+          _currentMode = VideoFormat.Fmt2D;
+          break;
+
+        case "3D Side by Side":
+          _activeDevice.SwitchFormat(_currentMode, VideoFormat.Fmt3DSBS);
+          GUIGraphicsContext.Render3DMode = GUIGraphicsContext.eRender3DMode.SideBySide;
+          _currentMode = VideoFormat.Fmt3DSBS;
+          break;
+
+        case "3D Top and Bottom":
+          _activeDevice.SwitchFormat(_currentMode, VideoFormat.Fmt3DTAB);
+          GUIGraphicsContext.Render3DMode = GUIGraphicsContext.eRender3DMode.TopAndBottom;
+          _currentMode = VideoFormat.Fmt3DTAB;
+          break;
+
+        case "2D -> 3D via TV":
+          _activeDevice.SwitchFormat(_currentMode, VideoFormat.Fmt2D3D);
+          GUIGraphicsContext.Render3DMode = GUIGraphicsContext.eRender3DMode.None;
+          _currentMode = VideoFormat.Fmt2D3D;
+          break;
+
+        case "3D SBS -> 2D via MediaPortal":
+          _activeDevice.SwitchFormat(_currentMode, VideoFormat.Fmt2D);
+          GUIGraphicsContext.Render3DMode = GUIGraphicsContext.eRender3DMode.SideBySideTo2D;
+          _currentMode = VideoFormat.Fmt2D;
+          break;
+
+        case "3D TAB -> 2D via MediaPortal":
+          _activeDevice.SwitchFormat(_currentMode, VideoFormat.Fmt2D);
+          GUIGraphicsContext.Render3DMode = GUIGraphicsContext.eRender3DMode.TopAndBottomTo2D;
+          _currentMode = VideoFormat.Fmt2D;
+          break;
+
+        case "3D Reverse Mode":
+          GUIGraphicsContext.Switch3DSides = true;
+          break;
+
+        case "3D Normal Mode":
+          GUIGraphicsContext.Switch3DSides = false;
+          break;
+
+        case "2D -> 3D SBS via MediaPortal":
+          _activeDevice.SwitchFormat(_currentMode, VideoFormat.Fmt3DSBS);
+          GUIGraphicsContext.Render3DMode = GUIGraphicsContext.eRender3DMode.SideBySideFrom2D;
+          _currentMode = VideoFormat.Fmt3DSBS;
+          break;
+      }
+
+      _dlgMenu = null;
+    }
+
 
     public static bool IsNetworkVideo(string strPath)
     {
@@ -1092,7 +1145,7 @@ namespace MediaPortal.ProcessPlugins.Auto3D
 
       // text based subtitles
 
-      string[] textSubtitleFormatsFileAndEmbedded = 
+      string[] textSubtitleFormatsFileAndEmbedded =
         {
             "aqt",
             "srt",
@@ -1122,16 +1175,16 @@ namespace MediaPortal.ProcessPlugins.Auto3D
             "s2k"
         };
 
-      string[] imageSubtitleFormatsFile = 
-        {        
+      string[] imageSubtitleFormatsFile =
+        {
             "idx",
             "sub",
             "scr",
             "son"
         };
 
-      string[] imageSubtitleFormatsEmbedded = 
-        {        
+      string[] imageSubtitleFormatsEmbedded =
+        {
             "vobsub",
             "dvb subtitle",
             "pgs",
@@ -1176,7 +1229,7 @@ namespace MediaPortal.ProcessPlugins.Auto3D
           break;
         }
       }
- 
+
       mi.Close();
       return result;
     }

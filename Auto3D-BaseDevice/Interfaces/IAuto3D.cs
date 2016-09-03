@@ -7,7 +7,25 @@ using System.Windows.Forms;
 
 namespace MediaPortal.ProcessPlugins.Auto3D.Devices
 {
-  public enum VideoFormat { Fmt2D, Fmt3DSBS, Fmt3DTAB, Fmt2D3D };
+  public enum VideoFormat
+  {
+    /// <summary>
+    /// 2D Video Format
+    /// </summary>
+    Fmt2D,
+    /// <summary>
+    /// 3D Side By Side Video Format
+    /// </summary>
+    Fmt3DSBS,
+    /// <summary>
+    /// 3D Top And Bottom Video Format
+    /// </summary>
+    Fmt3DTAB,
+    /// <summary>
+    /// 2D to 3D Conversion.
+    /// </summary>
+    Fmt2D3D
+  };
 
   [Flags]
   public enum DeviceInterface { None = 0, Network = 1, IR = 2 };
@@ -31,13 +49,13 @@ namespace MediaPortal.ProcessPlugins.Auto3D.Devices
 
     bool SendCommand(RemoteCommand rc);                         // Send a command to the device
 
-	DeviceInterface GetTurnOffInterfaces();
+    DeviceInterface GetTurnOffInterfaces();
     void TurnOff(DeviceInterface type);
 
-	bool IsOn();
-	DeviceInterface GetTurnOnInterfaces();
-	void TurnOn(DeviceInterface type);
+    bool IsOn();
+    DeviceInterface GetTurnOnInterfaces();
+    void TurnOn(DeviceInterface type);
 
-	String GetMacAddress();
+    String GetMacAddress();
   }
 }

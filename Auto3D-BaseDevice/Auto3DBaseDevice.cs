@@ -18,7 +18,7 @@ namespace MediaPortal.ProcessPlugins.Auto3D.Devices
 {
   public abstract class Auto3DBaseDevice : IAuto3D
   {
-	static IrToy _irToy = new IrToy();
+    static IrToy _irToy = new IrToy();
 
     String _docName;
     XmlDocument _deviceDoc = new XmlDocument();
@@ -88,31 +88,31 @@ namespace MediaPortal.ProcessPlugins.Auto3D.Devices
         }
         else
           if (type.BaseType != null && type.BaseType.Name == "UserControl")
+        {
+          _remoteKeyPad = (UserControl)Activator.CreateInstance(type);
+
+          IAuto3DKeypad iKeyPad = _remoteKeyPad as IAuto3DKeypad;
+
+          if (iKeyPad != null)
           {
-            _remoteKeyPad = (UserControl)Activator.CreateInstance(type);
-
-            IAuto3DKeypad iKeyPad = _remoteKeyPad as IAuto3DKeypad;
-
-            if (iKeyPad != null)
-            {
-              iKeyPad.SetDevice(this);
-            }
+            iKeyPad.SetDevice(this);
           }
+        }
       }
     }
 
-	public IrToy IrToy
-	{
-		get
-		{
-			return _irToy;
-		}
+    public IrToy IrToy
+    {
+      get
+      {
+        return _irToy;
+      }
 
-		set
-		{
-			_irToy = value;
-		}
-	}
+      set
+      {
+        _irToy = value;
+      }
+    }
 
     public bool Modified
     {
@@ -210,12 +210,12 @@ namespace MediaPortal.ProcessPlugins.Auto3D.Devices
 
     public virtual void Start()
     {
-		internalStartGenericDevice();
+      internalStartGenericDevice();
     }
 
     public virtual void Stop()
     {
-		internalStopGenericDevice();
+      internalStopGenericDevice();
     }
 
     public virtual void Suspend()
@@ -243,8 +243,8 @@ namespace MediaPortal.ProcessPlugins.Auto3D.Devices
       foreach (XmlNode node in commandsNode.ChildNodes)
       {
         RemoteCommand rc = GetRemoteCommandFromString(node.ChildNodes.Item(0).InnerText);
-		node.ChildNodes.Item(1).InnerText = rc.IrCode;
-        node.ChildNodes.Item(2).InnerText = rc.Delay.ToString();		
+        node.ChildNodes.Item(1).InnerText = rc.IrCode;
+        node.ChildNodes.Item(2).InnerText = rc.Delay.ToString();
       }
 
       // write document to file
@@ -286,14 +286,17 @@ namespace MediaPortal.ProcessPlugins.Auto3D.Devices
     {
     }
 
-    public bool SwitchFormat(VideoFormat fmtOld, VideoFormat fmtNew)
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="aNewVideoFormat"></param>
+    public void DisplayFormatChangeMessage(VideoFormat aNewVideoFormat)
     {
       if (/*GUIGraphicsContext.IsFullScreenVideo &&*/ bShowMessageOnModeChange)
       {
-
         String format = "";
 
-        switch (fmtNew)
+        switch (aNewVideoFormat)
         {
           case VideoFormat.Fmt2D:
 
@@ -341,62 +344,87 @@ namespace MediaPortal.ProcessPlugins.Auto3D.Devices
         }
 
         Auto3DHelpers.ShowAuto3DMessage("VideoFormat: " + format, true, 4);
-      }   
+      }
+    }
 
-      Log.Info("Auto3D: Begin SwitchToFormat");
-
-      try
+    /// <summary>
+    /// Tell our device to execute the desired transition.
+    /// </summary>
+    /// <param name="aCurrentVideoFormat"></param>
+    /// <param name="aNewVideoFormat"></param>
+    /// <returns></returns>
+    public bool DoSwitchFormat(VideoFormat aFromVideoFormat, VideoFormat aToVideoFormat)
+    {
+      if (aFromVideoFormat == VideoFormat.Fmt2D)
       {
-        switch (fmtNew)
+        // We are transitioning from 2D to a 3D format
+        switch (aToVideoFormat)
         {
           case VideoFormat.Fmt3DSBS:
-
             if (!SendCommandList(SelectedDeviceModel.RemoteCommandSequences.Commands2D3DSBS))
               return false;
             break;
 
           case VideoFormat.Fmt3DTAB:
-
             if (!SendCommandList(SelectedDeviceModel.RemoteCommandSequences.Commands2D3DTAB))
               return false;
             break;
 
           case VideoFormat.Fmt2D3D:
-
             if (!SendCommandList(SelectedDeviceModel.RemoteCommandSequences.Commands2D3D))
               return false;
             break;
+        }
+      }
+      else if (aToVideoFormat == VideoFormat.Fmt2D)
+      {
+        //We are transitioning from some 3D to 2D
+        switch (aFromVideoFormat)
+        {
+          case VideoFormat.Fmt3DSBS:
+            if (!SendCommandList(SelectedDeviceModel.RemoteCommandSequences.Commands3DSBS2D))
+              return false;
+            break;
 
-          case VideoFormat.Fmt2D:
+          case VideoFormat.Fmt3DTAB:
+            if (!SendCommandList(SelectedDeviceModel.RemoteCommandSequences.Commands3DTAB2D))
+              return false;
+            break;
 
-            switch (fmtOld)
-            {
-              case VideoFormat.Fmt3DSBS:
-
-                if (!SendCommandList(SelectedDeviceModel.RemoteCommandSequences.Commands3DSBS2D))
-                  return false;
-                break;
-
-              case VideoFormat.Fmt3DTAB:
-
-                if (!SendCommandList(SelectedDeviceModel.RemoteCommandSequences.Commands3DTAB2D))
-                  return false;
-                break;
-
-              case VideoFormat.Fmt2D3D:
-
-                if (!SendCommandList(SelectedDeviceModel.RemoteCommandSequences.Commands3D2D))
-                  return false;
-                break;
-            }
-
+          case VideoFormat.Fmt2D3D:
+            if (!SendCommandList(SelectedDeviceModel.RemoteCommandSequences.Commands3D2D))
+              return false;
             break;
         }
+      }
+      else
+      {
+        //We can't transition between 3D formats
+        Log.Warn("Auto3D: We can only transistion to or from 2D");
+      }
 
-        if (bSendEventGhostEvents)
-          SendEventGhostEvent(fmtNew);
+      // Tell EventGhost if needed
+      if (bSendEventGhostEvents)
+        SendEventGhostEvent(aToVideoFormat);
 
-        return true;
+      return true;
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="aCurrentVideoFormat"></param>
+    /// <param name="aNewVideoFormat"></param>
+    /// <returns></returns>
+    public bool SwitchFormat(VideoFormat aFromVideoFormat, VideoFormat aToVideoFormat)
+    {
+      DisplayFormatChangeMessage(aToVideoFormat);
+
+      Log.Info("Auto3D: Begin SwitchToFormat");
+
+      try
+      {
+        return DoSwitchFormat(aFromVideoFormat, aToVideoFormat);
       }
       catch (Exception ex)
       {
@@ -417,17 +445,17 @@ namespace MediaPortal.ProcessPlugins.Auto3D.Devices
       {
         Log.Info("Auto3D: Send Command " + command);
 
-		RemoteCommand rc = GetRemoteCommandFromString(command);
+        RemoteCommand rc = GetRemoteCommandFromString(command);
 
-		if (rc == null)
-		{
-			Log.Info("Auto3D: Unknown command - " + command);
-			return false;
-		}
+        if (rc == null)
+        {
+          Log.Info("Auto3D: Unknown command - " + command);
+          return false;
+        }
 
         if (!SendCommand(rc))
           return false;
-        
+
         Thread.Sleep(rc.Delay);
       }
 
@@ -449,101 +477,101 @@ namespace MediaPortal.ProcessPlugins.Auto3D.Devices
 
     public virtual bool SendCommand(RemoteCommand rc)
     {
-		/*if (command == "Power (IR)")
-		{
-			RemoteCommand rc = GetRemoteCommandFromString(command);
-			
-			if (rc != null)
-			{
-				if (rc.IrCode != null)
-				{
-					_irLib.Send(rc.IrCode);
-				}
-			}
-		}*/
+      /*if (command == "Power (IR)")
+      {
+          RemoteCommand rc = GetRemoteCommandFromString(command);
+
+          if (rc != null)
+          {
+              if (rc.IrCode != null)
+              {
+                  _irLib.Send(rc.IrCode);
+              }
+          }
+      }*/
 
       return false;
     }
 
-	public virtual DeviceInterface GetTurnOffInterfaces()
+    public virtual DeviceInterface GetTurnOffInterfaces()
     {
-        return DeviceInterface.None;
+      return DeviceInterface.None;
     }
 
-	public virtual void TurnOff(DeviceInterface type)
-    {		
+    public virtual void TurnOff(DeviceInterface type)
+    {
     }
 
-	public virtual DeviceInterface GetTurnOnInterfaces()
-	{
-		return DeviceInterface.None;
-	}
+    public virtual DeviceInterface GetTurnOnInterfaces()
+    {
+      return DeviceInterface.None;
+    }
 
-	public virtual void TurnOn(DeviceInterface type)
-	{		
-	}
+    public virtual void TurnOn(DeviceInterface type)
+    {
+    }
 
-	public virtual bool IsOn()
-	{
-		return false;
-	}
+    public virtual bool IsOn()
+    {
+      return false;
+    }
 
     public override String ToString()
     {
       return DeviceName;
     }
 
-	static void internalStartGenericDevice()
-	{
-		if (!string.IsNullOrEmpty(IrPortName) && IrPortName != "None" && !IsIrConnected())
-		{
-			try
-			{
-				_irToy.Connect(IrPortName);
-				Log.Info("Auto3D: IrToy connected");
-			}
-			catch (Exception ex)
-			{
-				Auto3DHelpers.ShowAuto3DMessage("Could not connect to IrToy: " + ex.Message, false, 0);
-				Log.Error("Auto3D: Could not connect to IrToy: " + ex.Message);
-			}
-		}
-	}
-
-	static void internalStopGenericDevice()
-	{
+    static void internalStartGenericDevice()
+    {
+      if (!string.IsNullOrEmpty(IrPortName) && IrPortName != "None" && !IsIrConnected())
+      {
         try
         {
-            _irToy.Close();
+          _irToy.Connect(IrPortName);
+          Log.Info("Auto3D: IrToy connected");
         }
         catch (Exception ex)
         {
-            Auto3DHelpers.ShowAuto3DMessage("Could not close IrToy: " + ex.Message, false, 0);
-            Log.Error("Auto3D: Could not close IrToy: " + ex.Message);
+          Auto3DHelpers.ShowAuto3DMessage("Could not connect to IrToy: " + ex.Message, false, 0);
+          Log.Error("Auto3D: Could not connect to IrToy: " + ex.Message);
         }
-	}
+      }
+    }
 
-	public static bool IsIrConnected()
-	{
-		return _irToy.IsConnected();
-	}
+    static void internalStopGenericDevice()
+    {
+      try
+      {
+        _irToy.Close();
+      }
+      catch (Exception ex)
+      {
+        Auto3DHelpers.ShowAuto3DMessage("Could not close IrToy: " + ex.Message, false, 0);
+        Log.Error("Auto3D: Could not close IrToy: " + ex.Message);
+      }
+    }
 
-	public static String IrPortName
-	{
-		get;
-		set;
-	}
+    public static bool IsIrConnected()
+    {
+      return _irToy.IsConnected();
+    }
 
-	public static bool AllowIrCommandsForAllDevices
-	{
-		get;
-		set;
-	}
+    public static String IrPortName
+    {
+      get;
+      set;
+    }
 
-	public virtual String GetMacAddress()
-	{
-		return "00-00-00-00-00-00";
-	}
+    public static bool AllowIrCommandsForAllDevices
+    {
+      get;
+      set;
+    }
+
+    public virtual String GetMacAddress()
+    {
+      return "00-00-00-00-00-00";
+    }
   }
 }
 
