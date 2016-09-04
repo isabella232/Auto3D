@@ -50,7 +50,8 @@ namespace MediaPortal.ProcessPlugins.Auto3D
     static List<IAuto3D> _listDevices = new List<IAuto3D>();
     IAuto3D _activeDevice = null;
 
-    String _currentName = "";
+    string _currentFileName = "";
+    g_Player.MediaType _currentMediaType = g_Player.MediaType.Unknown;
 
     bool b3DMenuAlways = false;
     bool b3DMenuOnKey = false;
@@ -70,7 +71,6 @@ namespace MediaPortal.ProcessPlugins.Auto3D
     bool bMenuMCERemote = false;
     String mceRemoteKey;
 
-    bool bSuppressSwitchBackTo2D = false;
     bool bConvert3DTo2D = false;
 
     bool bTurnDeviceOff = false;
@@ -299,7 +299,6 @@ namespace MediaPortal.ProcessPlugins.Auto3D
 
         bStretchSubtitles = reader.GetValueAsBool("Auto3DPlugin", "StretchSubtitles", false);
 
-        bSuppressSwitchBackTo2D = reader.GetValueAsBool("Auto3DPlugin", "SupressSwitchBackTo2D", false);
         bConvert3DTo2D = reader.GetValueAsBool("Auto3DPlugin", "Convert3DTo2D", false);
 
         SplitKeywords(ref _keywordsSBS, reader.GetValueAsString("Auto3DPlugin", "SwitchSBSLabels", "\"3DSBS\", \"3D SBS\""));
@@ -467,14 +466,14 @@ namespace MediaPortal.ProcessPlugins.Auto3D
         HIDInput.getInstance().HidEvent -= Auto3DSetup_HidEvent;
       }
 
-      if (!bSuppressSwitchBackTo2D)
-        GUIGraphicsContext.Render3DMode = GUIGraphicsContext.eRender3DMode.None;
+      GUIGraphicsContext.Render3DMode = GUIGraphicsContext.eRender3DMode.None;
 
       g_Player.PlayBackEnded -= OnPlayBackEnded;
       g_Player.PlayBackStopped -= OnPlayBackStopped;
       g_Player.PlayBackStarted -= OnPlayBackStarted;
       g_Player.PlayBackChanged -= OnPlayBackChanged;
-          
+      GUIGraphicsContext.OnVideoReceived -= OnVideoReceived;
+
       SystemEvents.PowerModeChanged -= SystemEvents_PowerModeChanged;
     }
 
@@ -669,6 +668,9 @@ namespace MediaPortal.ProcessPlugins.Auto3D
       }
     }
 
+    /// <summary>
+    /// SL: I'm not sure when is this needed?
+    /// </summary>
     private void UpdateSubtitleRenderFormat()
     {
       if (bStretchSubtitles)
@@ -693,7 +695,7 @@ namespace MediaPortal.ProcessPlugins.Auto3D
     private void RunSwitchBack()
     {
       Log.Info("Auto3D: Switch TV back to Normal Mode");
-      if (!bSuppressSwitchBackTo2D && (bConvert3DTo2D || _activeDevice.SwitchFormat(_currentMode, VideoFormat.Fmt2D)))
+      if (bConvert3DTo2D || _activeDevice.SwitchFormat(_currentMode, VideoFormat.Fmt2D))
       {
         _currentMode = VideoFormat.Fmt2D;
         GUIGraphicsContext.Render3DMode = GUIGraphicsContext.eRender3DMode.None;
@@ -762,20 +764,165 @@ namespace MediaPortal.ProcessPlugins.Auto3D
       return VideoFormat.Fmt2D;
     }
 
-    private void Analyze3DFormatVideo(g_Player.MediaType type)
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    private bool CheckNameFor3DFormat()
+    {
+      if (!bCheckNameFull)
+      {
+        return false;
+      }
+
+      var matchedKeywords = new Dictionary<string, MatchingVideoFormat>();
+      foreach (var keyword in _keywordsSBSR)
+      {
+        Log.Debug("Auto3D: Check if name contains \"" + keyword + "\"");
+
+        if (_currentFileName.IndexOf(keyword, StringComparison.OrdinalIgnoreCase) >= 0)
+        {
+          matchedKeywords.Add(keyword, MatchingVideoFormat.SydeBySide3DReverse);
+        }
+      }
+
+      foreach (var keyword in _keywordsSBS)
+      {
+        Log.Debug("Auto3D: Check if name contains \"" + keyword + "\"");
+
+        if (_currentFileName.IndexOf(keyword, StringComparison.OrdinalIgnoreCase) >= 0)
+        {
+          matchedKeywords.Add(keyword, MatchingVideoFormat.SydeBySide3D);
+        }
+      }
+
+      foreach (var keyword in _keywordsTABR)
+      {
+        Log.Debug("Auto3D: Check if name contains \"" + keyword + "\"");
+
+        if (_currentFileName.IndexOf(keyword, StringComparison.OrdinalIgnoreCase) >= 0)
+        {
+          matchedKeywords.Add(keyword, MatchingVideoFormat.TopBottom3DReverse);
+        }
+      }
+
+      foreach (var keyword in _keywordsTAB)
+      {
+        Log.Debug("Auto3D: Check if name contains \"" + keyword + "\"");
+
+        if (_currentFileName.IndexOf(keyword, StringComparison.OrdinalIgnoreCase) >= 0)
+        {
+          matchedKeywords.Add(keyword, MatchingVideoFormat.TopBottom3D);
+        }
+      }
+
+      if (matchedKeywords.Any())
+      {
+        Log.Info("Auto3D: Name contains \"{0}\"", string.Join("\", \"", matchedKeywords.Keys));
+
+        var keyword = matchedKeywords.Keys.OrderByDescending(x => x).FirstOrDefault();
+        var detectedFormat = MatchingVideoFormat.Simple2D;
+        if (!string.IsNullOrEmpty(keyword))
+        {
+          if (!matchedKeywords.TryGetValue(keyword, out detectedFormat))
+          {
+            Log.Info("Auto3D: not matched key for keyword \"{0}\" and 3D format is going to default {1}", keyword, detectedFormat);
+            detectedFormat = MatchingVideoFormat.Simple2D;
+          }
+          else
+          {
+            Log.Info("Auto3D: most matched is \"{0}\" and 3D format is {1}", keyword, detectedFormat);
+          }
+        }
+        else
+        {
+          Log.Info("Auto3D: key is empty and 3D format is going to default {0}", detectedFormat);
+        }
+
+        var format = ConvertMatchingFormatToVideoFormat(detectedFormat);
+        if (_activeDevice.SwitchFormat(_currentMode, format))
+        {
+          GUIGraphicsContext.Render3DMode = format == VideoFormat.Fmt3DSBS ? GUIGraphicsContext.eRender3DMode.SideBySide : GUIGraphicsContext.eRender3DMode.TopAndBottom;
+          GUIGraphicsContext.Switch3DSides = detectedFormat.HasFlag(MatchingVideoFormat.Reverse);
+          _currentMode = format;
+          UpdateSubtitleRenderFormat();
+          return true;
+        }
+      }
+
+      return false;
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    private bool CheckForFHD3D()
+    {
+      // Here we assume GUIGraphicsContext.IsFullHD3DFormat is already valid for the current media.
+      // See PlaneScene.SetVideoWindow and GUIGraphicsContext.OnVideoReceived.
+
+      // Check if we have full HD format.
+      // That saves us name chacks and frame analysis.
+      if (GUIGraphicsContext.IsFullHD3DFormat)
+      {
+        Log.Info("Auto3D: FHD3D");
+
+        //Constant taken from MP1 one
+        //TODO: remove this when MP1 is changed to publish which FHD format we have
+        const int KFull3DTABMinHeight = 720 * 2;
+        const int KFull3DSBSMinWidth = 1280 * 2;
+
+        if (GUIGraphicsContext.VideoSize.Width >= KFull3DSBSMinWidth)
+        {
+          Log.Info("Auto3D: FHD3D - SBS");
+          if (_activeDevice.SwitchFormat(_currentMode, VideoFormat.Fmt3DSBS))
+          {
+            _currentMode = VideoFormat.Fmt3DSBS;
+            GUIGraphicsContext.Render3DMode = GUIGraphicsContext.eRender3DMode.SideBySide;
+            UpdateSubtitleRenderFormat();
+            return true;
+          }
+        }
+
+        if (GUIGraphicsContext.VideoSize.Height >= KFull3DTABMinHeight)
+        {
+          Log.Info("Auto3D: FHD3D - TAB");
+          if (_activeDevice.SwitchFormat(_currentMode, VideoFormat.Fmt3DTAB))
+          {
+            _currentMode = VideoFormat.Fmt3DTAB;
+            GUIGraphicsContext.Render3DMode = GUIGraphicsContext.eRender3DMode.TopAndBottom;
+            UpdateSubtitleRenderFormat();
+            return true;
+          }
+        }
+      }
+      else
+      {
+        Log.Info("Auto3D: No FHD3D");
+      }
+
+      return false;
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="aType"></param>
+    private void Analyze3DFormatVideo(g_Player.MediaType aType)
     {
       lock (this)
       {
-        if (type == g_Player.MediaType.TV)
+        if (aType == g_Player.MediaType.TV)
         {
           Thread.Sleep(500); // wait 500ms to get a valid channel name
 
           String channel = GUIPropertyManager.GetProperty("#TV.View.channel");
 
-          if (channel == _currentName)
+          if (channel == _currentFileName)
             return;
 
-          _currentName = channel;
+          _currentFileName = channel;
         }
 
         _bPlaying = false;
@@ -787,132 +934,73 @@ namespace MediaPortal.ProcessPlugins.Auto3D
           Thread.Sleep(20);
         }
 
-        if ((type == g_Player.MediaType.Video && bVideo) || (type == g_Player.MediaType.TV && bTV))
+        if ((aType == g_Player.MediaType.Video && bVideo) || (aType == g_Player.MediaType.TV && bTV))
         {
           _bPlaying = true;
 
-          if (!b3DMenuAlways)
-          {
-            Log.Info("Auto3D: Automatic Mode");
-
-            if (bCheckNameFull)
-            {
-              var matchedKeywords = new Dictionary<string, MatchingVideoFormat>();
-              foreach (var keyword in _keywordsSBSR)
-              {
-                Log.Debug("Auto3D: Check if name contains \"" + keyword + "\"");
-
-                if (_currentName.IndexOf(keyword, StringComparison.OrdinalIgnoreCase) >= 0)
-                {
-                  matchedKeywords.Add(keyword, MatchingVideoFormat.SydeBySide3DReverse);
-                }
-              }
-
-              foreach (var keyword in _keywordsSBS)
-              {
-                Log.Debug("Auto3D: Check if name contains \"" + keyword + "\"");
-
-                if (_currentName.IndexOf(keyword, StringComparison.OrdinalIgnoreCase) >= 0)
-                {
-                  matchedKeywords.Add(keyword, MatchingVideoFormat.SydeBySide3D);
-                }
-              }
-
-              foreach (var keyword in _keywordsTABR)
-              {
-                Log.Debug("Auto3D: Check if name contains \"" + keyword + "\"");
-
-                if (_currentName.IndexOf(keyword, StringComparison.OrdinalIgnoreCase) >= 0)
-                {
-                  matchedKeywords.Add(keyword, MatchingVideoFormat.TopBottom3DReverse);
-                }
-              }
-
-              foreach (var keyword in _keywordsTAB)
-              {
-                Log.Debug("Auto3D: Check if name contains \"" + keyword + "\"");
-
-                if (_currentName.IndexOf(keyword, StringComparison.OrdinalIgnoreCase) >= 0)
-                {
-                  matchedKeywords.Add(keyword, MatchingVideoFormat.TopBottom3D);
-                }
-              }
-
-              if (matchedKeywords.Any())
-              {
-                Log.Info("Auto3D: Name contains \"{0}\"", string.Join("\", \"", matchedKeywords.Keys));
-
-                var keyword = matchedKeywords.Keys.OrderByDescending(x => x).FirstOrDefault();
-                var detectedFormat = MatchingVideoFormat.Simple2D;
-                if (!string.IsNullOrEmpty(keyword))
-                {
-                  if (!matchedKeywords.TryGetValue(keyword, out detectedFormat))
-                  {
-                    Log.Info("Auto3D: not matched key for keyword \"{0}\" and 3D format is going to default {1}", keyword, detectedFormat);
-                    detectedFormat = MatchingVideoFormat.Simple2D;
-                  }
-                  else
-                  {
-                    Log.Info("Auto3D: most matched is \"{0}\" and 3D format is {1}", keyword, detectedFormat);
-                  }
-                }
-                else
-                {
-                  Log.Info("Auto3D: key is empty and 3D format is going to default {0}", detectedFormat);
-                }
-
-                var format = ConvertMatchingFormatToVideoFormat(detectedFormat);
-                if (_activeDevice.SwitchFormat(_currentMode, format))
-                {
-                  GUIGraphicsContext.Render3DMode = format == VideoFormat.Fmt3DSBS ? GUIGraphicsContext.eRender3DMode.SideBySide : GUIGraphicsContext.eRender3DMode.TopAndBottom;
-                  GUIGraphicsContext.Switch3DSides = detectedFormat.HasFlag(MatchingVideoFormat.Reverse);
-                  _currentMode = format;
-                  UpdateSubtitleRenderFormat();
-                  return;
-                }
-              }
-            }
-
-            if (_currentMode == VideoFormat.Fmt2D && bCheckNameSimple)
-            {
-              if (_currentName.ToUpper().Contains("3D"))
-              {
-                Log.Info("Auto3D: Name contains \"3D\"");
-
-                if (_activeDevice.SwitchFormat(_currentMode, _nameFormat))
-                {
-                  switch (_nameFormat)
-                  {
-                    case VideoFormat.Fmt3DSBS:
-
-                      GUIGraphicsContext.Render3DMode = GUIGraphicsContext.eRender3DMode.SideBySide;
-                      break;
-
-                    case VideoFormat.Fmt3DTAB:
-
-                      GUIGraphicsContext.Render3DMode = GUIGraphicsContext.eRender3DMode.TopAndBottom;
-                      break;
-                  }
-
-                  _currentMode = _nameFormat;
-                  UpdateSubtitleRenderFormat();
-                }
-
-                return;
-              }
-            }
-          }
-          else // b3DMenuAlways
+          // Check if the user asked to always be shown the 3D selection dialog
+          if (b3DMenuAlways)
           {
             Log.Info("Auto3D: Manual Mode");
-
             ManualSelect3DFormat(_currentMode);
             UpdateSubtitleRenderFormat();
             return;
           }
 
+          Log.Info("Auto3D: Automatic Mode");
+
+          if (CheckNameFor3DFormat())
+          {
+            // We found a 3D format in our name and switched to it
+            // Therefore we are done here
+            return;
+          }
+
+          // Check if we have Full HD 3D mode
+          // Full HD detection is inexpensive and reliable
+          if (CheckForFHD3D())
+          {
+            return;
+          }
+
+
+          if (_currentMode == VideoFormat.Fmt2D && bCheckNameSimple)
+          {
+            if (_currentFileName.ToUpper().Contains("3D"))
+            {
+              Log.Info("Auto3D: Name contains \"3D\"");
+
+              if (_activeDevice.SwitchFormat(_currentMode, _nameFormat))
+              {
+                switch (_nameFormat)
+                {
+                  case VideoFormat.Fmt3DSBS:
+                    GUIGraphicsContext.Render3DMode = GUIGraphicsContext.eRender3DMode.SideBySide;
+                    break;
+
+                  case VideoFormat.Fmt3DTAB:
+                    GUIGraphicsContext.Render3DMode = GUIGraphicsContext.eRender3DMode.TopAndBottom;
+                    break;
+                }
+
+                _currentMode = _nameFormat;
+                UpdateSubtitleRenderFormat();
+              }
+
+              return;
+            }
+          }
+
           if ((bCheckSideBySide || bCheckTopAndBottom) /* && type == g_Player.MediaType.Video*/)
+          {
             AnalyzeVideo();
+          }
+          else
+          {
+            // No format detected and no complex analysis needed, switch back to 2D then
+            Log.Info("Auto3D: No 3D format detected, switching back to 2D");
+            RunSwitchBack();
+          }
         }
       }
     }
@@ -981,7 +1069,7 @@ namespace MediaPortal.ProcessPlugins.Auto3D
         //We are in a 3D mode
         //User need to be able to switch back to 2D
         _dlgMenu.Add("2D");
-        
+
         if (aCurrentMode == VideoFormat.Fmt3DSBS)
         {
           // Provide an option to convert to 2D
@@ -1087,6 +1175,32 @@ namespace MediaPortal.ProcessPlugins.Auto3D
     }
 
 
+
+    /// <summary>
+    /// After starting media playback and once the first frame is ready we received this event.
+    /// From here we can trigger the first stage of our video format analysis.
+    /// </summary>
+    public void OnVideoReceived()
+    {
+      Log.Info($"Auto3D: OnVideoReceived");
+
+      // do not handle e.g. visualization window, last.fm player, etc
+      if (_currentMediaType == g_Player.MediaType.Video || _currentMediaType == g_Player.MediaType.TV)
+      {
+        var isNetwork = IsNetworkVideo(_currentFileName);
+        subTitleType = isNetwork ? eSubTitle.None : DetectSubtitleType(_currentFileName);
+        if (!isNetwork || bAnalyzeNetworkStream)
+        {
+          Task.Factory.StartNew(() => Analyze3DFormatVideo(_currentMediaType));
+        }
+      }
+
+      // We don't want any further notification until another media starts
+      GUIGraphicsContext.OnVideoReceived -= OnVideoReceived;
+    }
+
+
+
     /// <summary>
     /// Handles the g_Player.PlayBackEnded event
     /// </summary>
@@ -1097,7 +1211,7 @@ namespace MediaPortal.ProcessPlugins.Auto3D
       Log.Info($"Auto3D: OnPlayBackEnded: {aType.ToString()} : {aFileName}");
       // do not handle e.g. visualization window, last.fm player, etc
       if (aType == g_Player.MediaType.Video || aType == g_Player.MediaType.TV)
-      {        
+      {
         subTitleType = eSubTitle.None;
         Task.Factory.StartNew(() => ProcessingVideoStop(aType));
       }
@@ -1126,17 +1240,12 @@ namespace MediaPortal.ProcessPlugins.Auto3D
     public void OnPlayBackStarted(g_Player.MediaType aType, string aFileName)
     {
       Log.Info($"Auto3D: OnPlayBackStarted: {aType.ToString()} : {aFileName}");
-      // do not handle e.g. visualization window, last.fm player, etc
-      if (aType == g_Player.MediaType.Video || aType == g_Player.MediaType.TV)
-      {
-        _currentName = aFileName;
-        var isNetwork = IsNetworkVideo(aFileName);
-        subTitleType = isNetwork ? eSubTitle.None : DetectSubtitleType(aFileName);
-        if (!isNetwork || bAnalyzeNetworkStream)
-        {
-          Task.Factory.StartNew(() => Analyze3DFormatVideo(aType));
-        }
-      }
+
+      _currentFileName = aFileName;
+      _currentMediaType = aType;
+
+      // Wait for the first frame to come in
+      GUIGraphicsContext.OnVideoReceived += OnVideoReceived;
     }
 
     /// <summary>
@@ -1146,10 +1255,6 @@ namespace MediaPortal.ProcessPlugins.Auto3D
     public void OnPlayBackChanged(g_Player.MediaType aType, int aStopTime, string aFileName)
     {
       Log.Info($"Auto3D: OnPlayBackChanged: {aType.ToString()} : {aFileName}");
-      // do not handle e.g. visualization window, last.fm player, etc
-      if (aType == g_Player.MediaType.Video || aType == g_Player.MediaType.TV)
-      {
-      }
     }
 
 

@@ -159,7 +159,6 @@ namespace MediaPortal.ProcessPlugins.Auto3D
         trackBarDepth3D.Value = reader.GetValueAsInt("Auto3DPlugin", "SubtitleDepth", 0);
 
         checkBoxModeSwitchMessage.Checked = reader.GetValueAsBool("Auto3DPlugin", "ShowMessageOnModeChange", true);
-        checkBoxSupressSwitchBackTo2D.Checked = reader.GetValueAsBool("Auto3DPlugin", "SupressSwitchBackTo2D", false);
         checkBoxConvert3Dto2D.Checked = reader.GetValueAsBool("Auto3DPlugin", "Convert3DTo2D", false);
 
         textBoxSBS.Text = reader.GetValueAsString("Auto3DPlugin", "SwitchSBSLabels", "\"3DSBS\", \"3D SBS\"");
@@ -214,7 +213,6 @@ namespace MediaPortal.ProcessPlugins.Auto3D
         writer.SetValueAsBool("Auto3DPlugin", "EventGhostEvents", checkBoxEventGhost.Checked);
 
         writer.SetValueAsBool("Auto3DPlugin", "ShowMessageOnModeChange", checkBoxModeSwitchMessage.Checked);
-        writer.SetValueAsBool("Auto3DPlugin", "SupressSwitchBackTo2D", checkBoxSupressSwitchBackTo2D.Checked);
         writer.SetValueAsBool("Auto3DPlugin", "Convert3DTo2D", checkBoxConvert3Dto2D.Checked);
 
         writer.SetValueAsBool("Auto3DPlugin", "3DSubtitles", checkBox3DSubTitles.Checked);
