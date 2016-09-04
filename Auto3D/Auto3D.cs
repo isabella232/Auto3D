@@ -444,6 +444,10 @@ namespace MediaPortal.ProcessPlugins.Auto3D
 
     public void Stop()
     {
+      //SL: Plug-in is being stop, switch to 2D now synchonously.
+      // We are hoping this is happening when MP1 is closing.
+      RunSwitchBack();
+
       // sometimes stop is called before SystemEvents_SessionEnding
       // in this case we shut down devices here, if necessary (before connection is closed)
 
@@ -1226,12 +1230,16 @@ namespace MediaPortal.ProcessPlugins.Auto3D
     public void OnPlayBackStopped(g_Player.MediaType aType, int aStopTime, string aFileName)
     {
       Log.Info($"Auto3D: OnPlayBackStopped: {aType.ToString()} : {aFileName}");
+
+      // It looks like some skins like StreamedMP are sending stop playback events even though it should be a changed.
+      // Is this an issue with Moving Picture plugin?
+
       // do not handle e.g. visualization window, last.fm player, etc
-      if (aType == g_Player.MediaType.Video || aType == g_Player.MediaType.TV)
-      {
-        subTitleType = eSubTitle.None;
-        Task.Factory.StartNew(() => ProcessingVideoStop(aType));
-      }
+      //if (aType == g_Player.MediaType.Video || aType == g_Player.MediaType.TV)
+      //{
+      //  subTitleType = eSubTitle.None;
+      //  Task.Factory.StartNew(() => ProcessingVideoStop(aType));
+      //}
     }
 
     /// <summary>
