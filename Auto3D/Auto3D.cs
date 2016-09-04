@@ -216,9 +216,10 @@ namespace MediaPortal.ProcessPlugins.Auto3D
     {
       _run = true;
 
-      g_Player.PlayBackEnded += OnVideoEnded;
-      g_Player.PlayBackStopped += OnVideoStopped;
-      g_Player.PlayBackStarted += OnVideoStarted;
+      g_Player.PlayBackEnded += OnPlayBackEnded;
+      g_Player.PlayBackStopped += OnPlayBackStopped;
+      g_Player.PlayBackStarted += OnPlayBackStarted;
+      g_Player.PlayBackChanged += OnPlayBackChanged;
       g_Player.TVChannelChanged += OnTVChannelChanged;
 
       using (Settings reader = new MPSettings())
@@ -469,10 +470,11 @@ namespace MediaPortal.ProcessPlugins.Auto3D
       if (!bSuppressSwitchBackTo2D)
         GUIGraphicsContext.Render3DMode = GUIGraphicsContext.eRender3DMode.None;
 
-      g_Player.PlayBackEnded -= OnVideoEnded;
-      g_Player.PlayBackStopped -= OnVideoStopped;
-      g_Player.PlayBackStarted -= OnVideoStarted;
-
+      g_Player.PlayBackEnded -= OnPlayBackEnded;
+      g_Player.PlayBackStopped -= OnPlayBackStopped;
+      g_Player.PlayBackStarted -= OnPlayBackStarted;
+      g_Player.PlayBackChanged -= OnPlayBackChanged;
+          
       SystemEvents.PowerModeChanged -= SystemEvents_PowerModeChanged;
     }
 
@@ -642,22 +644,20 @@ namespace MediaPortal.ProcessPlugins.Auto3D
 
             return; // exit thread
           }
-          else
-            if ((_currentMode == VideoFormat.Fmt2D) && ((countNormal > countSideBySide3D + treshold) || (countNormal > countTopBottom3D + treshold)))
+          else if ((_currentMode == VideoFormat.Fmt2D) && ((countNormal > countSideBySide3D + treshold) || (countNormal > countTopBottom3D + treshold)))
           {
             // current format is normal and video is normal too, we do not need to switch
             Log.Info("Auto3D: Format is 2D. No switch necessary");
             return; // exit thread
           }
-          else
-              if (_currentMode != VideoFormat.Fmt2D)
+          else if (_currentMode != VideoFormat.Fmt2D)
           {
             // current format 3d and video is 2d, so we must switch back to normal
+            Log.Info("Auto3D: Video Analysis decided this is a 2D video.");
             RunSwitchBack();
             return; // exit thread
           }
-          else
-                if (iStep > maxAnalyzeSteps)
+          else if (iStep > maxAnalyzeSteps)
           {
             // we could not make a decision within the maximum allowed steps
             Log.Info("Auto3D: Video Analysis failed!");
@@ -781,14 +781,11 @@ namespace MediaPortal.ProcessPlugins.Auto3D
         _bPlaying = false;
 
         // wait for ending worker thread
-
+        // SL: Dodgy stuff
         if (_workerThread != null && _workerThread.IsAlive)
+        {
           Thread.Sleep(20);
-
-        // is 3d mode is active switch back to normal mode
-
-        if (_currentMode != VideoFormat.Fmt2D)
-          SwitchBack();
+        }
 
         if ((type == g_Player.MediaType.Video && bVideo) || (type == g_Player.MediaType.TV && bTV))
         {
@@ -1095,49 +1092,66 @@ namespace MediaPortal.ProcessPlugins.Auto3D
     /// </summary>
     /// <param name="type"></param>
     /// <param name="s"></param>
-    public void OnVideoEnded(g_Player.MediaType type, string s)
+    public void OnPlayBackEnded(g_Player.MediaType aType, string aFileName)
     {
+      Log.Info($"Auto3D: OnPlayBackEnded: {aType.ToString()} : {aFileName}");
       // do not handle e.g. visualization window, last.fm player, etc
-      if (type == g_Player.MediaType.Video || type == g_Player.MediaType.TV)
-      {
+      if (aType == g_Player.MediaType.Video || aType == g_Player.MediaType.TV)
+      {        
         subTitleType = eSubTitle.None;
-        Task.Factory.StartNew(() => ProcessingVideoStop(type));
+        Task.Factory.StartNew(() => ProcessingVideoStop(aType));
       }
     }
 
     /// <summary>
     /// Handles the g_Player.PlayBackStopped event
     /// </summary>
-    /// <param name="type"></param>
+    /// <param name="aType"></param>
     /// <param name="i"></param>
     /// <param name="s"></param>
-    public void OnVideoStopped(g_Player.MediaType type, int i, string s)
+    public void OnPlayBackStopped(g_Player.MediaType aType, int aStopTime, string aFileName)
     {
+      Log.Info($"Auto3D: OnPlayBackStopped: {aType.ToString()} : {aFileName}");
       // do not handle e.g. visualization window, last.fm player, etc
-      if (type == g_Player.MediaType.Video || type == g_Player.MediaType.TV)
+      if (aType == g_Player.MediaType.Video || aType == g_Player.MediaType.TV)
       {
         subTitleType = eSubTitle.None;
-        Task.Factory.StartNew(() => ProcessingVideoStop(type));
+        Task.Factory.StartNew(() => ProcessingVideoStop(aType));
       }
     }
 
     /// <summary>
     /// Handles the g_Player.PlayBackStarted event
     /// </summary>
-    public void OnVideoStarted(g_Player.MediaType type, string s)
+    public void OnPlayBackStarted(g_Player.MediaType aType, string aFileName)
     {
+      Log.Info($"Auto3D: OnPlayBackStarted: {aType.ToString()} : {aFileName}");
       // do not handle e.g. visualization window, last.fm player, etc
-      if (type == g_Player.MediaType.Video || type == g_Player.MediaType.TV)
+      if (aType == g_Player.MediaType.Video || aType == g_Player.MediaType.TV)
       {
-        _currentName = s;
-        var isNetwork = IsNetworkVideo(s);
-        subTitleType = isNetwork ? eSubTitle.None : DetectSubtitleType(s);
+        _currentName = aFileName;
+        var isNetwork = IsNetworkVideo(aFileName);
+        subTitleType = isNetwork ? eSubTitle.None : DetectSubtitleType(aFileName);
         if (!isNetwork || bAnalyzeNetworkStream)
         {
-          Task.Factory.StartNew(() => Analyze3DFormatVideo(type));
+          Task.Factory.StartNew(() => Analyze3DFormatVideo(aType));
         }
       }
     }
+
+    /// <summary>
+    /// Handles the g_Player.PlayBackChanged event
+    /// Changed event comes in instead of a stop event when user jump from one video to another.
+    /// </summary>
+    public void OnPlayBackChanged(g_Player.MediaType aType, int aStopTime, string aFileName)
+    {
+      Log.Info($"Auto3D: OnPlayBackChanged: {aType.ToString()} : {aFileName}");
+      // do not handle e.g. visualization window, last.fm player, etc
+      if (aType == g_Player.MediaType.Video || aType == g_Player.MediaType.TV)
+      {
+      }
+    }
+
 
     private static eSubTitle DetectSubtitleType(string s)
     {

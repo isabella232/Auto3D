@@ -353,8 +353,24 @@ namespace MediaPortal.ProcessPlugins.Auto3D.Devices
     /// <param name="aCurrentVideoFormat"></param>
     /// <param name="aNewVideoFormat"></param>
     /// <returns></returns>
-    public bool DoSwitchFormat(VideoFormat aFromVideoFormat, VideoFormat aToVideoFormat)
+    private bool DoSwitchFormat(VideoFormat aFromVideoFormat, VideoFormat aToVideoFormat)
     {
+      Log.Info($"Auto3D: DoSwitchFormat: From {aFromVideoFormat} To {aToVideoFormat}");
+
+      if (aFromVideoFormat != VideoFormat.Fmt2D && aToVideoFormat != VideoFormat.Fmt2D)
+      {
+        //We are trying to switch from one 3D format to another
+        //First we need to switch back to 2D
+        Log.Info("Auto3D: Need to switch to 2D first");
+        DoSwitchFormat(aFromVideoFormat,VideoFormat.Fmt2D);
+        aFromVideoFormat = VideoFormat.Fmt2D;
+        // Wait for the async format change to be completed
+        // SL: That's ugly, fix it at some point
+        // We should be ok though since this execute on a dedicated task thread
+        Thread.Sleep(10000);
+      }
+
+
       if (aFromVideoFormat == VideoFormat.Fmt2D)
       {
         // We are transitioning from 2D to a 3D format
@@ -418,10 +434,16 @@ namespace MediaPortal.ProcessPlugins.Auto3D.Devices
     /// <returns></returns>
     public bool SwitchFormat(VideoFormat aFromVideoFormat, VideoFormat aToVideoFormat)
     {
+      Log.Info("Auto3D: SwitchToFormat"); 
+
+      if (aFromVideoFormat == aToVideoFormat)
+      {
+        Log.Info($"Auto3D: SwitchFormat: No format switch needed");
+        return true;
+      }
+
       DisplayFormatChangeMessage(aToVideoFormat);
-
-      Log.Info("Auto3D: Begin SwitchToFormat");
-
+     
       try
       {
         return DoSwitchFormat(aFromVideoFormat, aToVideoFormat);
