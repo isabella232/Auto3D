@@ -427,7 +427,7 @@ namespace MediaPortal.ProcessPlugins.Auto3D
       if (key == mceRemoteKey)
       {
         if (_dlgMenu == null)
-          ManualSelectThread();
+          RunManualSwitch();
         else
         {
           _dlgMenu.PageDestroy();
@@ -720,15 +720,6 @@ namespace MediaPortal.ProcessPlugins.Auto3D
     {
       Log.Info("Auto3D: Manual Mode via Remote");
       ManualSelect3DFormat(_currentMode);
-    }
-
-    private void ManualSelectThread()
-    {
-      Thread thread = new Thread(new ThreadStart(RunManualSwitch));
-      thread.IsBackground = true;
-      thread.Name = "Auto3D manual select thread";
-      thread.Priority = ThreadPriority.AboveNormal;
-      thread.Start();
     }
 
     private void ProcessingVideoStop(g_Player.MediaType type)

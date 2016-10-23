@@ -111,7 +111,7 @@ namespace MediaPortal.ProcessPlugins.Auto3D
 
 			rid[0].usUsagePage = (ushort)SharpLib.Hid.UsagePage.WindowsMediaCenterRemoteControl;
 			rid[0].usUsage = (ushort)SharpLib.Hid.UsageCollection.WindowsMediaCenter.WindowsMediaCenterRemoteControl;
-			rid[0].dwFlags = Const.RIDEV_EXINPUTSINK;
+			rid[0].dwFlags = RawInputDeviceFlags.RIDEV_EXINPUTSINK;
 			rid[0].hwndTarget = Handle;			
 
 			int repeatDelay = -1;
