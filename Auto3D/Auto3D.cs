@@ -1075,13 +1075,13 @@ namespace MediaPortal.ProcessPlugins.Auto3D
           _dlgMenu.Add("2D");
         }
 
-        if (_activeDevice.IsDefined(VideoFormat.Fmt3DSBS))
+        if (_activeDevice.IsDefined(VideoFormat.Fmt3DSBS) || (aCurrentMode == VideoFormat.Fmt2D || aCurrentMode == VideoFormat.Fmt3DSBS))
         {
           _dlgMenu.Add("3D Side by Side");
           _dlgMenu.Add("3D SBS -> 2D via MediaPortal");
         }
 
-        if (_activeDevice.IsDefined(VideoFormat.Fmt3DTAB))
+        if (_activeDevice.IsDefined(VideoFormat.Fmt3DTAB) || (aCurrentMode == VideoFormat.Fmt2D || aCurrentMode == VideoFormat.Fmt3DTAB))
         {
           _dlgMenu.Add("3D Top and Bottom");
           _dlgMenu.Add("3D TAB -> 2D via MediaPortal");
@@ -1121,6 +1121,7 @@ namespace MediaPortal.ProcessPlugins.Auto3D
           // Provide an option to reverse
           AddSwitchSidesOption();
         }
+        _dlgMenu.Add("Subtitle displayed mode change 3D/2D");
       }
     }
 
