@@ -83,6 +83,8 @@ namespace MediaPortal.ProcessPlugins.Auto3D
 
     bool bConvert2Dto3DEnabled = false;
 
+    bool bForceSubtitleMode = false;
+
     Thread _workerThread = null;
 
     GUIDialogMenu _dlgMenu = null;
@@ -325,7 +327,7 @@ namespace MediaPortal.ProcessPlugins.Auto3D
 
     // system was shut down through MediaPortal GUI
 
-    void GUIGraphicsContext_OnNewAction(GUI.Library.Action action)
+    private void GUIGraphicsContext_OnNewAction(GUI.Library.Action action)
     {
       if (action.wID == GUI.Library.Action.ActionType.ACTION_SHUTDOWN &&
           GUIGraphicsContext.CurrentState == GUIGraphicsContext.State.STOPPING)
@@ -333,6 +335,27 @@ namespace MediaPortal.ProcessPlugins.Auto3D
         Log.Debug("Auto3D: MediaPortal ShutDown");
 
         SystemShutDown();
+      }
+      if (action.wID == GUI.Library.Action.ActionType.ACTION_KEY_PRESSED)
+      {
+        Log.Debug("Auto3D: Key pressed received");
+        var convertToString = (new KeysConverter()).ConvertToString(action.m_key.KeyChar);
+        if (convertToString != null)
+        {
+          string _mPKey = convertToString.ToLowerInvariant();
+          if (_mPKey.ToLowerInvariant() == _menuHotKey.ToString().ToLowerInvariant())
+          {
+            Log.Info("Auto3D: Manual Mode via Hotkey");
+            if (_dlgMenu == null)
+            {
+              RunManualSwitch();
+            }
+            else
+            {
+              _dlgMenu.PageDestroy();
+            }
+          }
+        }
       }
     }
 
@@ -552,7 +575,18 @@ namespace MediaPortal.ProcessPlugins.Auto3D
 
           fastCompareImage.UnlockBits(bmpData);
 
+          if (image != null)
+          {
+            image.Dispose();
+            image = null;
+          }
+
           Log.Debug("Similarity: " + similarity + " - " + vf[iStep].ToString());
+        }
+        else
+        {
+          // Wait for a valid frame
+          iStep = 0;
         }
 
         if (iStep > 3)
@@ -677,6 +711,10 @@ namespace MediaPortal.ProcessPlugins.Auto3D
     /// </summary>
     private void UpdateSubtitleRenderFormat()
     {
+      if (bForceSubtitleMode)
+      {
+        return;
+      }
       if (bStretchSubtitles)
       {
         GUIGraphicsContext.StretchSubtitles = true;
@@ -921,6 +959,7 @@ namespace MediaPortal.ProcessPlugins.Auto3D
         }
 
         _bPlaying = false;
+        bForceSubtitleMode = false;
 
         // wait for ending worker thread
         // SL: Dodgy stuff
@@ -1058,6 +1097,8 @@ namespace MediaPortal.ProcessPlugins.Auto3D
           //2D to 3D Conversion
           _dlgMenu.Add("2D -> 3D via TV");
         }
+
+        _dlgMenu.Add("Subtitle displayed mode change 3D/2D");
       }
       else
       {
@@ -1091,6 +1132,8 @@ namespace MediaPortal.ProcessPlugins.Auto3D
     public void ManualSelect3DFormat(VideoFormat aCurrentMode)
     {
       _dlgMenu = (GUIDialogMenu)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_MENU);
+      bForceSubtitleMode = false;
+
       if (_dlgMenu == null)
       {
         return;
@@ -1151,6 +1194,11 @@ namespace MediaPortal.ProcessPlugins.Auto3D
           _activeDevice.SwitchFormat(_currentMode, VideoFormat.Fmt3DSBS);
           GUIGraphicsContext.Render3DMode = GUIGraphicsContext.eRender3DMode.SideBySideFrom2D;
           _currentMode = VideoFormat.Fmt3DSBS;
+          break;
+
+        case "Subtitle displayed mode change 3D/2D":
+          GUIGraphicsContext.StretchSubtitles = !GUIGraphicsContext.StretchSubtitles;
+          bForceSubtitleMode = true;
           break;
       }
 
