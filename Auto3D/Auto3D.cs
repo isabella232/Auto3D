@@ -1275,11 +1275,11 @@ namespace MediaPortal.ProcessPlugins.Auto3D
       // Is this an issue with Moving Picture plugin?
 
       // do not handle e.g. visualization window, last.fm player, etc
-      //if (aType == g_Player.MediaType.Video || aType == g_Player.MediaType.TV)
-      //{
-      //  subTitleType = eSubTitle.None;
-      //  Task.Factory.StartNew(() => ProcessingVideoStop(aType));
-      //}
+      if (aType == g_Player.MediaType.Video || aType == g_Player.MediaType.TV)
+      {
+        subTitleType = eSubTitle.None;
+        Task.Factory.StartNew(() => ProcessingVideoStop(aType));
+      }
     }
 
     /// <summary>
