@@ -40,6 +40,9 @@ namespace MediaPortal.ProcessPlugins.Auto3D
 
     private volatile bool _run;
     private volatile bool _bPlaying;
+    private readonly System.Timers.Timer _analyzeTimer = new System.Timers.Timer();
+    public int CounterTimer { get; set; }
+    private bool _reEntrant;
 
     /// <summary>
     /// TODO: At some point we need to distinguish between the current format and the format of the playing stream.
@@ -338,7 +341,6 @@ namespace MediaPortal.ProcessPlugins.Auto3D
       }
       if (action.wID == GUI.Library.Action.ActionType.ACTION_KEY_PRESSED)
       {
-        Log.Debug("Auto3D: Key pressed received");
         var convertToString = (new KeysConverter()).ConvertToString(action.m_key.KeyChar);
         if (convertToString != null)
         {
@@ -487,6 +489,9 @@ namespace MediaPortal.ProcessPlugins.Auto3D
 
       _run = false;
       _activeDevice.Stop();
+
+      // Stop timer
+      _analyzeTimer?.Stop();
 
       if (bMenuMCERemote)
       {
@@ -960,6 +965,8 @@ namespace MediaPortal.ProcessPlugins.Auto3D
 
         _bPlaying = false;
         bForceSubtitleMode = false;
+        // reset timer count
+        CounterTimer = 0;
 
         // wait for ending worker thread
         // SL: Dodgy stuff
@@ -1035,6 +1042,12 @@ namespace MediaPortal.ProcessPlugins.Auto3D
             Log.Info("Auto3D: No 3D format detected, switching back to 2D");
             RunSwitchBack();
           }
+
+          // Start timer
+          _analyzeTimer.Enabled = true;
+          _analyzeTimer.Elapsed += _analyseTimer_Elapsed;
+          _analyzeTimer.Interval = 15000;
+          _analyzeTimer.Start();
         }
       }
     }
@@ -1292,8 +1305,16 @@ namespace MediaPortal.ProcessPlugins.Auto3D
       _currentFileName = aFileName;
       _currentMediaType = aType;
 
-      // Wait for the first frame to come in
-      GUIGraphicsContext.OnVideoReceived += OnVideoReceived;
+      // For madVR GUIGraphicsContext.OnVideoReceived is not always send at time
+      if (GUIGraphicsContext.VideoRenderer == GUIGraphicsContext.VideoRendererType.madVR)
+      {
+        OnVideoReceived();
+      }
+      else
+      {
+        // Wait for the first frame to come in
+        GUIGraphicsContext.OnVideoReceived += OnVideoReceived;
+      }
     }
 
     /// <summary>
@@ -1406,6 +1427,51 @@ namespace MediaPortal.ProcessPlugins.Auto3D
       g_Player.MediaType type = g_Player.MediaType.TV;
       subTitleType = eSubTitle.None;
       Task.Factory.StartNew(() => Analyze3DFormatVideo(type));
+    }
+
+    /// <summary>
+    /// timer callback.
+    /// This method is called by a timer every 10 seconds for 2 pass
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private void _analyseTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+    {
+      //security check, dont allow re-entrancy here
+      if (_reEntrant)
+        return;
+      try
+      {
+        _reEntrant = true;
+        try
+        {
+          CounterTimer++;
+          string threadname = Thread.CurrentThread.Name;
+          if (string.IsNullOrEmpty(threadname))
+          {
+            Thread.CurrentThread.Name = "Auto3D timer analyse";
+          }
+        }
+        catch (InvalidOperationException)
+        {
+        }
+      }
+      catch (Exception ex)
+      {
+        Log.Debug(ex.ToString());
+      }
+      finally
+      {
+        _reEntrant = false;
+        if (CounterTimer >= 2)
+        {
+          _analyzeTimer.Stop();
+        }
+        else
+        {
+          AnalyzeVideo();
+        }
+      }
     }
   }
 }
