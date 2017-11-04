@@ -36,15 +36,17 @@ namespace MediaPortal.ProcessPlugins.Auto3D.Devices
 			listBox3D2D.ItemHeight = 19;
 			listBox3DSBS2D.ItemHeight = 19;
 			listBox3DTAB2D.ItemHeight = 19;
+      listBox3DMVC.ItemHeight = 19;
 
-			listBox2D3D.DrawItem += listBox_DrawItem;
+      listBox2D3D.DrawItem += listBox_DrawItem;
 			listBox2D3DSBS.DrawItem += listBox_DrawItem;
 			listBox2D3DTAB.DrawItem += listBox_DrawItem;
 			listBox3D2D.DrawItem += listBox_DrawItem;
 			listBox3DSBS2D.DrawItem += listBox_DrawItem;
 			listBox3DTAB2D.DrawItem += listBox_DrawItem;
+      listBox3DMVC.DrawItem += listBox_DrawItem;
 
-			CenterToParent();
+      CenterToParent();
     }
 
 		void listBox_DrawItem(object sender, DrawItemEventArgs e)
@@ -83,6 +85,7 @@ namespace MediaPortal.ProcessPlugins.Auto3D.Devices
       InternalCommandSetToListBox(_device.SelectedDeviceModel.RemoteCommandSequences.Commands3DTAB2D, listBox3DTAB2D);
       InternalCommandSetToListBox(_device.SelectedDeviceModel.RemoteCommandSequences.Commands2D3D, listBox2D3D);
       InternalCommandSetToListBox(_device.SelectedDeviceModel.RemoteCommandSequences.Commands3D2D, listBox3D2D);
+      InternalCommandSetToListBox(_device.SelectedDeviceModel.RemoteCommandSequences.Commands3DMVC, listBox3DMVC);
 
       _lbList.Add(listBox2D3DSBS);
       _lbList.Add(listBox3DSBS2D);
@@ -90,6 +93,7 @@ namespace MediaPortal.ProcessPlugins.Auto3D.Devices
       _lbList.Add(listBox3DTAB2D);
       _lbList.Add(listBox2D3D);
       _lbList.Add(listBox3D2D);
+      _lbList.Add(listBox3DMVC);
 
       panelKeyPad.Controls.Add(device.GetRemoteControl());
       device.GetRemoteControl().Anchor = AnchorStyles.Right | AnchorStyles.Left | AnchorStyles.Bottom | AnchorStyles.Top;
@@ -327,6 +331,7 @@ namespace MediaPortal.ProcessPlugins.Auto3D.Devices
           InternalListBoxToCommandset(_device.SelectedDeviceModel.RemoteCommandSequences.Commands3DTAB2D, listBox3DTAB2D);
           InternalListBoxToCommandset(_device.SelectedDeviceModel.RemoteCommandSequences.Commands2D3D, listBox2D3D);
           InternalListBoxToCommandset(_device.SelectedDeviceModel.RemoteCommandSequences.Commands3D2D, listBox3D2D);
+          InternalListBoxToCommandset(_device.SelectedDeviceModel.RemoteCommandSequences.Commands3DMVC, listBox3DMVC);
 
           _device.SelectedDeviceModel.RemoteCommandSequences.WriteCommands();
           _device.SaveDocument();
@@ -340,6 +345,7 @@ namespace MediaPortal.ProcessPlugins.Auto3D.Devices
         InternalCheckForDifference(_device.SelectedDeviceModel.RemoteCommandSequences.Commands3DTAB2D, listBox3DTAB2D);
         InternalCheckForDifference(_device.SelectedDeviceModel.RemoteCommandSequences.Commands2D3D, listBox2D3D);
         InternalCheckForDifference(_device.SelectedDeviceModel.RemoteCommandSequences.Commands3D2D, listBox3D2D);
+        InternalCheckForDifference(_device.SelectedDeviceModel.RemoteCommandSequences.Commands3DMVC, listBox3DMVC);
 
         if (_device.Modified && (MessageBox.Show("Save modified settings ?", "Save TV Settings", MessageBoxButtons.YesNo) == DialogResult.Yes))
         {
@@ -349,6 +355,7 @@ namespace MediaPortal.ProcessPlugins.Auto3D.Devices
           InternalListBoxToCommandset(_device.SelectedDeviceModel.RemoteCommandSequences.Commands3DTAB2D, listBox3DTAB2D);
           InternalListBoxToCommandset(_device.SelectedDeviceModel.RemoteCommandSequences.Commands2D3D, listBox2D3D);
           InternalListBoxToCommandset(_device.SelectedDeviceModel.RemoteCommandSequences.Commands3D2D, listBox3D2D);
+          InternalListBoxToCommandset(_device.SelectedDeviceModel.RemoteCommandSequences.Commands3DMVC, listBox3DMVC);
 
           _device.SelectedDeviceModel.RemoteCommandSequences.WriteCommands();
           _device.SaveDocument();

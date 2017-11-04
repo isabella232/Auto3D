@@ -155,6 +155,8 @@
         </Commands2D3D>
         <Commands3D2D>
         </Commands3D2D>
+        <Commands3DMVC>
+        </Commands3DMVC>
       </CommandLists>
     </Model>
   </Models>

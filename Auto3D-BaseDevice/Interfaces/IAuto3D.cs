@@ -24,7 +24,11 @@ namespace MediaPortal.ProcessPlugins.Auto3D.Devices
     /// <summary>
     /// 2D to 3D Conversion.
     /// </summary>
-    Fmt2D3D
+    Fmt2D3D,
+    /// <summary>
+    /// 3D MVC Mode.
+    /// </summary>
+    Mvc3D
   };
 
   [Flags]

@@ -193,6 +193,10 @@ namespace MediaPortal.ProcessPlugins.Auto3D.Devices
         case VideoFormat.Fmt2D3D:
 
           return SelectedDeviceModel.RemoteCommandSequences.Commands2D3D.Count > 0;
+
+        case VideoFormat.Mvc3D:
+
+          return SelectedDeviceModel.RemoteCommandSequences.Commands3DMVC.Count > 0;
       }
 
       return false;
@@ -341,6 +345,11 @@ namespace MediaPortal.ProcessPlugins.Auto3D.Devices
 
             format = "2D -> 3D via TV";
             break;
+
+          case VideoFormat.Mvc3D:
+
+            format = "3D MVC mode";
+            break;
         }
 
         Auto3DHelpers.ShowAuto3DMessage("VideoFormat: " + format, true, 4);
@@ -390,6 +399,11 @@ namespace MediaPortal.ProcessPlugins.Auto3D.Devices
             if (!SendCommandList(SelectedDeviceModel.RemoteCommandSequences.Commands2D3D))
               return false;
             break;
+
+          case VideoFormat.Mvc3D:
+            if (!SendCommandList(SelectedDeviceModel.RemoteCommandSequences.Commands3DMVC))
+              return false;
+            break;
         }
       }
       else if (aToVideoFormat == VideoFormat.Fmt2D)
@@ -408,6 +422,11 @@ namespace MediaPortal.ProcessPlugins.Auto3D.Devices
             break;
 
           case VideoFormat.Fmt2D3D:
+            if (!SendCommandList(SelectedDeviceModel.RemoteCommandSequences.Commands3D2D))
+              return false;
+            break;
+
+          case VideoFormat.Mvc3D:
             if (!SendCommandList(SelectedDeviceModel.RemoteCommandSequences.Commands3D2D))
               return false;
             break;

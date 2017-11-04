@@ -62,6 +62,8 @@
           <Command>3DFormatAuto</Command>
           <Command>3DFormat2D</Command>
         </Commands3D2D>
+        <Commands3DMVC>
+        </Commands3DMVC>
       </CommandLists>
     </Model>
   </Models>

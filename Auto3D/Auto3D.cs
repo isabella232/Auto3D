@@ -695,8 +695,11 @@ namespace MediaPortal.ProcessPlugins.Auto3D
           else if (_currentMode != VideoFormat.Fmt2D)
           {
             // current format 3d and video is 2d, so we must switch back to normal
-            Log.Info("Auto3D: Video Analysis decided this is a 2D video.");
-            RunSwitchBack();
+            Log.Info("Auto3D: Video Analysis decided this is a 2D video or 3D MVC.");
+            if (_currentMode != VideoFormat.Mvc3D)
+            {
+              RunSwitchBack();
+            }
             return; // exit thread
           }
           else if (iStep > maxAnalyzeSteps)
@@ -1032,6 +1035,12 @@ namespace MediaPortal.ProcessPlugins.Auto3D
             }
           }
 
+          // Need to wait to avoid crash in madVR if frame is taken too soon
+          if (GUIGraphicsContext.VideoRenderer == GUIGraphicsContext.VideoRendererType.madVR)
+          {
+            //Thread.Sleep(10000);
+          }
+
           if ((bCheckSideBySide || bCheckTopAndBottom) /* && type == g_Player.MediaType.Video*/)
           {
             AnalyzeVideo();
@@ -1040,7 +1049,10 @@ namespace MediaPortal.ProcessPlugins.Auto3D
           {
             // No format detected and no complex analysis needed, switch back to 2D then
             Log.Info("Auto3D: No 3D format detected, switching back to 2D");
-            RunSwitchBack();
+            if (_currentMode != VideoFormat.Mvc3D)
+            {
+              RunSwitchBack();
+            }
           }
 
           // Start timer
@@ -1080,8 +1092,8 @@ namespace MediaPortal.ProcessPlugins.Auto3D
       {
         //We want to provide switch options to supported 3D format
 
-        //
-        if (GUIGraphicsContext.Render3DMode != GUIGraphicsContext.eRender3DMode.None)
+        // Needed to have the 2D switch for 3D MVC mode
+        // if (GUIGraphicsContext.Render3DMode != GUIGraphicsContext.eRender3DMode.None)
         {
           //We were in some MediaPortal 2D to 3D conversion mode
           //Give the user the option to go back to 2D
@@ -1111,6 +1123,12 @@ namespace MediaPortal.ProcessPlugins.Auto3D
           _dlgMenu.Add("2D -> 3D via TV");
         }
 
+        if (_activeDevice.IsDefined(VideoFormat.Mvc3D))
+        {
+          //2D to 3D Conversion
+          _dlgMenu.Add("3D MVC Mode");
+        }
+
         _dlgMenu.Add("Subtitle displayed mode change 3D/2D");
       }
       else
@@ -1134,6 +1152,13 @@ namespace MediaPortal.ProcessPlugins.Auto3D
           // Provide an option to reverse
           AddSwitchSidesOption();
         }
+
+        if (_activeDevice.IsDefined(VideoFormat.Mvc3D))
+        {
+          //2D to 3D Conversion
+          _dlgMenu.Add("3D MVC Mode");
+        }
+
         _dlgMenu.Add("Subtitle displayed mode change 3D/2D");
       }
     }
@@ -1201,6 +1226,13 @@ namespace MediaPortal.ProcessPlugins.Auto3D
           break;
 
         case "3D Normal Mode":
+          GUIGraphicsContext.Switch3DSides = false;
+          break;
+
+        case "3D MVC Mode":
+          _activeDevice.SwitchFormat(_currentMode, VideoFormat.Mvc3D);
+          GUIGraphicsContext.Render3DMode = GUIGraphicsContext.eRender3DMode.None;
+          _currentMode = VideoFormat.Mvc3D;
           GUIGraphicsContext.Switch3DSides = false;
           break;
 

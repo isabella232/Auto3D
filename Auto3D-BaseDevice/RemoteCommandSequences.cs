@@ -18,6 +18,7 @@ namespace MediaPortal.ProcessPlugins.Auto3D.Devices
     List<String> _commands3DTAB2D = new List<String>();
     List<String> _commands2D3D = new List<String>();
     List<String> _commands3D2D = new List<String>();
+    List<String> _commands3DMVC = new List<String>();
 
     public RemoteCommandSequences()
     {
@@ -71,6 +72,11 @@ namespace MediaPortal.ProcessPlugins.Auto3D.Devices
       get { return _commands3D2D; }
     }
 
+    public List<String> Commands3DMVC
+    {
+      get { return _commands3DMVC; }
+    }
+
     public void ReadCommands(XmlNode node)
     {
       _rootNode = node;
@@ -108,6 +114,11 @@ namespace MediaPortal.ProcessPlugins.Auto3D.Devices
           case "Commands3D2D":
 
             ReadList(_commands3D2D, listNode);
+            break;
+
+          case "Commands3DMVC":
+
+            ReadList(_commands3DMVC, listNode);
             break;
         }
       }
@@ -156,6 +167,11 @@ namespace MediaPortal.ProcessPlugins.Auto3D.Devices
           case "Commands3D2D":
 
             WriteList(_commands3D2D, listNode);
+            break;
+
+          case "Commands3DMVC":
+
+            WriteList(_commands3DMVC, listNode);
             break;
         }
       }

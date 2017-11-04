@@ -219,6 +219,8 @@
         <Commands3D2D>
           <Command>Mode3D</Command>
         </Commands3D2D>
+        <Commands3DMVC>
+        </Commands3DMVC>
       </CommandLists>
     </Model>
     <Model>
@@ -257,6 +259,8 @@
         <Commands3D2D>
           <Command>Mode3D</Command>
         </Commands3D2D>
+        <Commands3DMVC>
+        </Commands3DMVC>
       </CommandLists>
     </Model>
   </Models>

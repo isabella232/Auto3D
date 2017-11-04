@@ -63,6 +63,8 @@
                 <Commands3D2D>
                     <Command>3D>2D</Command>
                 </Commands3D2D>
+		        <Commands3DMVC>
+                </Commands3DMVC>
             </CommandLists>
         </Model>
     </Models>

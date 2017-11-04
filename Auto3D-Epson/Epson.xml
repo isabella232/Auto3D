@@ -113,6 +113,9 @@
         <Commands3D2D>
           <Command>2D3DConversionOff</Command>
         </Commands3D2D>
+        <Commands3DMVC>
+          <Command>3DFormatAuto</Command>
+        </Commands3DMVC>
       </CommandLists>
     </Model>
   </Models>

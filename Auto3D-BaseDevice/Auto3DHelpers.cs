@@ -37,38 +37,42 @@ namespace MediaPortal.ProcessPlugins.Auto3D.Devices
 
     public static void ShowAuto3DMessage(String msg, bool forceMPGUI, int seconds)
     {
-        try
+      try
+      {
+        if (msg == null)
         {
-			Form mainForm = Auto3DHelpers.GetMainForm();
-
-			if (Auto3DHelpers.GetMainForm().IsDisposed)
-				return;
-
-			if (mainForm.InvokeRequired)
-            {
-                mainForm.Invoke(new ShowMessageDelegate(ShowAuto3DMessage), msg, forceMPGUI, seconds);
-                return;
-            }
-
-            if (GUIGraphicsContext.IsFullScreenVideo || forceMPGUI)
-            {
-                GUIMessage guiMsg = new GUIMessage(GUIMessage.MessageType.GUI_MSG_REFRESHRATE_CHANGED, 0, 0, 0, 0, 0, null);
-                
-				guiMsg.Label = "Auto3D";
-                guiMsg.Label2 = msg;
-                guiMsg.Param1 = seconds;
-
-                GUIGraphicsContext.SendMessage(guiMsg);
-            }
-            else
-            {
-                MessageBox.Show(msg, "Auto3D");
-            }
+          return;
         }
-        catch (Exception ex)
+        Form mainForm = Auto3DHelpers.GetMainForm();
+
+        if (Auto3DHelpers.GetMainForm().IsDisposed)
+          return;
+
+        if (mainForm.InvokeRequired)
         {
-            Log.Error("ShowAuto3DMessage failed: " + ex.Message);
+          mainForm.Invoke(new ShowMessageDelegate(ShowAuto3DMessage), msg, forceMPGUI, seconds);
+          return;
         }
+
+        if (GUIGraphicsContext.IsFullScreenVideo || forceMPGUI)
+        {
+          GUIMessage guiMsg = new GUIMessage(GUIMessage.MessageType.GUI_MSG_REFRESHRATE_CHANGED, 0, 0, 0, 0, 0, null);
+
+          guiMsg.Label = "Auto3D";
+          guiMsg.Label2 = msg;
+          guiMsg.Param1 = seconds;
+
+          GUIGraphicsContext.SendMessage(guiMsg);
+        }
+        else
+        {
+          MessageBox.Show(msg, "Auto3D");
+        }
+      }
+      catch (Exception ex)
+      {
+        Log.Error("ShowAuto3DMessage failed: " + ex.Message);
+      }
     }
 
     public delegate void ShowMessageDelegate(String msg, bool forceMPGUI, int seconds);
