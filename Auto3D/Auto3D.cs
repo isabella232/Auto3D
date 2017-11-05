@@ -1171,7 +1171,6 @@ namespace MediaPortal.ProcessPlugins.Auto3D
     public void ManualSelect3DFormat(VideoFormat aCurrentMode)
     {
       _dlgMenu = (GUIDialogMenu)GUIWindowManager.GetWindow((int)GUIWindow.Window.WINDOW_DIALOG_MENU);
-      bForceSubtitleMode = false;
 
       if (_dlgMenu == null)
       {
@@ -1501,7 +1500,11 @@ namespace MediaPortal.ProcessPlugins.Auto3D
         }
         else
         {
-          AnalyzeVideo();
+          // Start analyse only if it's 2D (because first one has maybe failed)
+          if (_currentMode == VideoFormat.Fmt2D)
+          {
+            AnalyzeVideo();
+          }
         }
       }
     }
