@@ -43,6 +43,7 @@ namespace MediaPortal.ProcessPlugins.Auto3D
     private readonly System.Timers.Timer _analyzeTimer = new System.Timers.Timer();
     public int CounterTimer { get; set; }
     private bool _reEntrant;
+    private readonly object AnalyzeVideoLock = new object(); // Wait/Notify object for waiting for the grab to complete
 
     /// <summary>
     /// TODO: At some point we need to distinguish between the current format and the format of the playing stream.
@@ -356,7 +357,7 @@ namespace MediaPortal.ProcessPlugins.Auto3D
             {
               _dlgMenu.PageDestroy();
             }
-          }
+           }
         }
       }
     }
@@ -441,6 +442,7 @@ namespace MediaPortal.ProcessPlugins.Auto3D
         if (_dlgMenu == null && e.KeyValue == (int)_menuHotKey)
         {
           Log.Info("Auto3D: Manual Mode via Hotkey");
+          Log.Debug("Auto3D: Manual Mode KeyValue {0}", e.KeyValue);
           ManualSelect3DFormat(_currentMode);
           UpdateSubtitleRenderFormat();
         }
@@ -511,206 +513,236 @@ namespace MediaPortal.ProcessPlugins.Auto3D
 
     private void RunAnalyzeVideo()
     {
-      Log.Info("Auto3D: Start Video Analysis");
-
-      FrameGrabber fg = FrameGrabber.GetInstance();
-
-      int maxAnalyzeSteps = 20;
-      int treshold = 5;
-
-      VideoFormat[] vf = new VideoFormat[maxAnalyzeSteps + 1];
-
-      int iStep = 0;
-
-      while (_run && _bPlaying)
+      lock (AnalyzeVideoLock)
       {
-        // wait 200 ms
+        Log.Info("Auto3D: Start Video Analysis");
 
-        for (int i = 0; i < 10; i++)
+        FrameGrabber fg = FrameGrabber.GetInstance();
+
+        int maxAnalyzeSteps = 20;
+        int treshold = 5;
+
+        VideoFormat[] vf = new VideoFormat[maxAnalyzeSteps + 1];
+
+        int iStep = 0;
+        int iStepMax = 0;
+
+        System.Drawing.Bitmap image = null;
+
+        while (_run && _bPlaying)
         {
-          if (!_bPlaying) // if playing is stopped while we wait then return
-            return;
+          // wait 200 ms
 
-          Thread.Sleep(20);
-        }
-
-        System.Drawing.Bitmap image = fg.GetCurrentImage();
-
-        if (image != null)
-        {
-          Bitmap fastCompareImage = new Bitmap(96, 96);
-
-          // set the resolutions the same to avoid cropping due to resolution differences
-          fastCompareImage.SetResolution(image.HorizontalResolution, image.VerticalResolution);
-
-          //use a graphics object to draw the resized image into the bitmap
-          using (Graphics graphics = Graphics.FromImage(fastCompareImage))
+          for (int i = 0; i < 10; i++)
           {
-            graphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.Bicubic;
-            graphics.DrawImage(image, 0, 0, fastCompareImage.Width, fastCompareImage.Height);
+            if (!_bPlaying) // if playing is stopped while we wait then return
+              return;
+
+            Thread.Sleep(20);
           }
 
-          // Lock the bitmap's bits.
-          Rectangle rect = new Rectangle(0, 0, fastCompareImage.Width, fastCompareImage.Height);
-          System.Drawing.Imaging.BitmapData bmpData = fastCompareImage.LockBits(rect, System.Drawing.Imaging.ImageLockMode.ReadWrite, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
-
-          double similarity = 0;
-
-          vf[iStep] = VideoFormat.Fmt2D; // assume normal format
-
-          if (bCheckSideBySide)
-            similarity = Auto3DAnalyzer.CheckFor3DFormat(bmpData, bmpData.Width / 2, bmpData.Height, true);
-
-          if (similarity == -1) // not bright enough for analysis
-            continue;
-
-          if (similarity > 0.925)
-            vf[iStep] = VideoFormat.Fmt3DSBS;
-          else
+          try
           {
-            if (bCheckTopAndBottom)
-              similarity = Auto3DAnalyzer.CheckFor3DFormat(bmpData, bmpData.Width, bmpData.Height / 2, false);
+            image = fg.GetCurrentImage();
 
-            if (similarity == -1) // not bright enough for analysis -> continue
-              continue;
-
-            if (similarity > 0.925)
-              vf[iStep] = VideoFormat.Fmt3DTAB;
-          }
-
-          fastCompareImage.UnlockBits(bmpData);
-
-          if (image != null)
-          {
-            image.Dispose();
-            image = null;
-          }
-
-          Log.Debug("Similarity: " + similarity + " - " + vf[iStep].ToString());
-        }
-        else
-        {
-          // Wait for a valid frame
-          iStep = 0;
-        }
-
-        if (iStep > 3)
-        {
-          // check if we can make a decision
-
-          int countNormal = 0;
-          int countSideBySide3D = 0;
-          int countTopBottom3D = 0;
-
-          for (int i = 0; i <= iStep; i++)
-          {
-            switch (vf[i])
+            if (image != null)
             {
-              case VideoFormat.Fmt2D:
+              Bitmap fastCompareImage = new Bitmap(96, 96);
 
-                countNormal++;
-                break;
+              // set the resolutions the same to avoid cropping due to resolution differences
+              fastCompareImage.SetResolution(image.HorizontalResolution, image.VerticalResolution);
 
-              case VideoFormat.Fmt3DSBS:
-
-                countSideBySide3D++;
-                break;
-
-              case VideoFormat.Fmt3DTAB:
-
-                countTopBottom3D++;
-                break;
-            }
-          }
-
-          Log.Debug("Results(" + iStep + ") - Normal=" + countNormal + " - SBS3D=" + countSideBySide3D + " - TB3D=" + countTopBottom3D);
-
-          if ((countSideBySide3D >= (countNormal + treshold)) || (countTopBottom3D >= (countNormal + treshold)) || (countSideBySide3D >= countNormal && iStep == maxAnalyzeSteps) || (countTopBottom3D >= countNormal && iStep == maxAnalyzeSteps))
-          {
-            VideoFormat videoFormat = countTopBottom3D > countSideBySide3D ? VideoFormat.Fmt3DTAB : VideoFormat.Fmt3DSBS;
-
-            if ((videoFormat == VideoFormat.Fmt3DSBS) || (videoFormat == VideoFormat.Fmt3DTAB))
-            {
-              if (videoFormat == VideoFormat.Fmt3DTAB)
-                Log.Info("Auto3D: Video Analysis Finished: Switch TV to TAB 3D");
-              else
-                Log.Info("Auto3D: Video Analysis Finished: Switch TV to SBS 3D");
-
-              if (bConvert3DTo2D)
+              //use a graphics object to draw the resized image into the bitmap
+              using (Graphics graphics = Graphics.FromImage(fastCompareImage))
               {
-                switch (videoFormat)
+                graphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.Bicubic;
+                graphics.DrawImage(image, 0, 0, fastCompareImage.Width, fastCompareImage.Height);
+              }
+
+              // Lock the bitmap's bits.
+              Rectangle rect = new Rectangle(0, 0, fastCompareImage.Width, fastCompareImage.Height);
+              System.Drawing.Imaging.BitmapData bmpData = fastCompareImage.LockBits(rect,
+                System.Drawing.Imaging.ImageLockMode.ReadWrite, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
+
+              double similarity = 0;
+
+              vf[iStep] = VideoFormat.Fmt2D; // assume normal format
+
+              if (bCheckSideBySide)
+                similarity = Auto3DAnalyzer.CheckFor3DFormat(bmpData, bmpData.Width/2, bmpData.Height, true);
+
+              if (similarity == -1) // not bright enough for analysis
+                continue;
+
+              if (similarity > 0.925)
+                vf[iStep] = VideoFormat.Fmt3DSBS;
+              else
+              {
+                if (bCheckTopAndBottom)
+                  similarity = Auto3DAnalyzer.CheckFor3DFormat(bmpData, bmpData.Width, bmpData.Height/2, false);
+
+                if (similarity == -1) // not bright enough for analysis -> continue
+                  continue;
+
+                if (similarity > 0.925)
+                  vf[iStep] = VideoFormat.Fmt3DTAB;
+              }
+
+              fastCompareImage.UnlockBits(bmpData);
+
+              if (image != null)
+              {
+                image.Dispose();
+                image = null;
+              }
+
+              Log.Debug("Similarity: " + similarity + " - " + vf[iStep].ToString());
+            }
+            else
+            {
+              if (iStepMax >= 40)
+              {
+                break;
+              }
+              // Wait for a valid frame
+              iStep = 0;
+              iStepMax++;
+            }
+
+            if (iStep > 3)
+            {
+              // check if we can make a decision
+
+              int countNormal = 0;
+              int countSideBySide3D = 0;
+              int countTopBottom3D = 0;
+
+              for (int i = 0; i <= iStep; i++)
+              {
+                switch (vf[i])
                 {
+                  case VideoFormat.Fmt2D:
+
+                    countNormal++;
+                    break;
+
                   case VideoFormat.Fmt3DSBS:
 
-                    GUIGraphicsContext.Render3DMode = GUIGraphicsContext.eRender3DMode.SideBySideTo2D;
+                    countSideBySide3D++;
                     break;
 
                   case VideoFormat.Fmt3DTAB:
 
-                    GUIGraphicsContext.Render3DMode = GUIGraphicsContext.eRender3DMode.TopAndBottomTo2D;
+                    countTopBottom3D++;
                     break;
                 }
-
-                _currentMode = videoFormat;
               }
-              else
+
+              Log.Debug("Results(" + iStep + ") - Normal=" + countNormal + " - SBS3D=" + countSideBySide3D + " - TB3D=" +
+                        countTopBottom3D);
+
+              if ((countSideBySide3D >= (countNormal + treshold)) || (countTopBottom3D >= (countNormal + treshold)) ||
+                  (countSideBySide3D >= countNormal && iStep == maxAnalyzeSteps) ||
+                  (countTopBottom3D >= countNormal && iStep == maxAnalyzeSteps))
               {
-                if (_activeDevice.SwitchFormat(_currentMode, videoFormat))
+                VideoFormat videoFormat = countTopBottom3D > countSideBySide3D
+                  ? VideoFormat.Fmt3DTAB
+                  : VideoFormat.Fmt3DSBS;
+
+                if ((videoFormat == VideoFormat.Fmt3DSBS) || (videoFormat == VideoFormat.Fmt3DTAB))
                 {
-                  switch (videoFormat)
+                  if (videoFormat == VideoFormat.Fmt3DTAB)
+                    Log.Info("Auto3D: Video Analysis Finished: Switch TV to TAB 3D");
+                  else
+                    Log.Info("Auto3D: Video Analysis Finished: Switch TV to SBS 3D");
+
+                  if (bConvert3DTo2D)
                   {
-                    case VideoFormat.Fmt3DSBS:
+                    switch (videoFormat)
+                    {
+                      case VideoFormat.Fmt3DSBS:
 
-                      GUIGraphicsContext.Render3DMode = GUIGraphicsContext.eRender3DMode.SideBySide;
-                      break;
+                        GUIGraphicsContext.Render3DMode = GUIGraphicsContext.eRender3DMode.SideBySideTo2D;
+                        break;
 
-                    case VideoFormat.Fmt3DTAB:
+                      case VideoFormat.Fmt3DTAB:
 
-                      GUIGraphicsContext.Render3DMode = GUIGraphicsContext.eRender3DMode.TopAndBottom;
-                      break;
+                        GUIGraphicsContext.Render3DMode = GUIGraphicsContext.eRender3DMode.TopAndBottomTo2D;
+                        break;
+                    }
+
+                    _currentMode = videoFormat;
+                  }
+                  else
+                  {
+                    if (_activeDevice.SwitchFormat(_currentMode, videoFormat))
+                    {
+                      switch (videoFormat)
+                      {
+                        case VideoFormat.Fmt3DSBS:
+
+                          GUIGraphicsContext.Render3DMode = GUIGraphicsContext.eRender3DMode.SideBySide;
+                          break;
+
+                        case VideoFormat.Fmt3DTAB:
+
+                          GUIGraphicsContext.Render3DMode = GUIGraphicsContext.eRender3DMode.TopAndBottom;
+                          break;
+                      }
+
+                      _currentMode = videoFormat;
+                    }
                   }
 
-                  _currentMode = videoFormat;
+                  UpdateSubtitleRenderFormat();
                 }
+                else
+                {
+                  //SL: Not sure why we want to go manual here?
+                  // Is it because we could not workout the format?
+                  ManualSelect3DFormat(videoFormat);
+                  UpdateSubtitleRenderFormat();
+                }
+
+                return; // exit thread
               }
+              else if ((_currentMode == VideoFormat.Fmt2D) &&
+                       ((countNormal > countSideBySide3D + treshold) || (countNormal > countTopBottom3D + treshold)))
+              {
+                // current format is normal and video is normal too, we do not need to switch
+                Log.Info("Auto3D: Format is 2D. No switch necessary");
+                return; // exit thread
+              }
+              else if (_currentMode != VideoFormat.Fmt2D)
+              {
+                // current format 3d and video is 2d, so we must switch back to normal
+                Log.Info("Auto3D: Video Analysis decided this is a 2D video or 3D MVC.");
+                if (_currentMode != VideoFormat.Mvc3D)
+                {
+                  RunSwitchBack();
+                }
+                return; // exit thread
+              }
+              else if (iStep > maxAnalyzeSteps)
+              {
+                // we could not make a decision within the maximum allowed steps
+                Log.Info("Auto3D: Video Analysis failed!");
+                return; // exit thread
+              }
+            }
 
-              UpdateSubtitleRenderFormat();
-            }
-            else
+            iStep++;
+          }
+          catch (Exception)
+          {
+            iStep = 0;
+            if (image != null)
             {
-              //SL: Not sure why we want to go manual here?
-              // Is it because we could not workout the format?
-              ManualSelect3DFormat(videoFormat);
-              UpdateSubtitleRenderFormat();
+              image.Dispose();
+              image = null;
             }
-
-            return; // exit thread
-          }
-          else if ((_currentMode == VideoFormat.Fmt2D) && ((countNormal > countSideBySide3D + treshold) || (countNormal > countTopBottom3D + treshold)))
-          {
-            // current format is normal and video is normal too, we do not need to switch
-            Log.Info("Auto3D: Format is 2D. No switch necessary");
-            return; // exit thread
-          }
-          else if (_currentMode != VideoFormat.Fmt2D)
-          {
-            // current format 3d and video is 2d, so we must switch back to normal
-            Log.Info("Auto3D: Video Analysis decided this is a 2D video or 3D MVC.");
-            if (_currentMode != VideoFormat.Mvc3D)
-            {
-              RunSwitchBack();
-            }
-            return; // exit thread
-          }
-          else if (iStep > maxAnalyzeSteps)
-          {
-            // we could not make a decision within the maximum allowed steps
-            Log.Info("Auto3D: Video Analysis failed!");
-            return; // exit thread
           }
         }
-
-        iStep++;
       }
     }
 
@@ -1038,7 +1070,7 @@ namespace MediaPortal.ProcessPlugins.Auto3D
           // Need to wait to avoid crash in madVR if frame is taken too soon
           if (GUIGraphicsContext.VideoRenderer == GUIGraphicsContext.VideoRendererType.madVR)
           {
-            //Thread.Sleep(10000);
+            Thread.Sleep(5000);
           }
 
           if ((bCheckSideBySide || bCheckTopAndBottom) /* && type == g_Player.MediaType.Video*/)
@@ -1503,7 +1535,15 @@ namespace MediaPortal.ProcessPlugins.Auto3D
           // Start analyse only if it's 2D (because first one has maybe failed)
           if (_currentMode == VideoFormat.Fmt2D)
           {
-            AnalyzeVideo();
+            if (!_bPlaying) // if playing is stopped while we wait then return
+            {
+              Log.Info("Auto3D: Stop Video Analysis Timer");
+              _analyzeTimer.Stop();
+            }
+            else
+            {
+              AnalyzeVideo();
+            }
           }
         }
       }
