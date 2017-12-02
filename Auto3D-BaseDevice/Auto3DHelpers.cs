@@ -89,15 +89,19 @@ namespace MediaPortal.ProcessPlugins.Auto3D.Devices
             byte[] buffer = Encoding.ASCII.GetBytes(data);
             int timeout = 120;
 
+          if (ipAddress != null && !string.IsNullOrEmpty(ipAddress))
+          {
             PingReply reply = pingSender.Send(ipAddress, timeout, buffer, options);
 
-            return reply.Status == IPStatus.Success;
+            return reply?.Status == IPStatus.Success;
+          }
         }
         catch (Exception ex)
         {
             Log.Error("Auto3D: Ping failed - " + ex.Message);
             return false;
-        }        
+        }
+      return false;
     }
 
 	[DllImport("iphlpapi.dll")]
