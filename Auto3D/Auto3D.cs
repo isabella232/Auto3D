@@ -986,6 +986,9 @@ namespace MediaPortal.ProcessPlugins.Auto3D
     {
       lock (this)
       {
+        var isNetwork = IsNetworkVideo(_currentFileName);
+        subTitleType = isNetwork ? eSubTitle.None : DetectSubtitleType(_currentFileName);
+
         if (aType == g_Player.MediaType.TV)
         {
           Thread.Sleep(500); // wait 500ms to get a valid channel name
@@ -1308,7 +1311,6 @@ namespace MediaPortal.ProcessPlugins.Auto3D
       if (_currentMediaType == g_Player.MediaType.Video || _currentMediaType == g_Player.MediaType.TV)
       {
         var isNetwork = IsNetworkVideo(_currentFileName);
-        subTitleType = isNetwork ? eSubTitle.None : DetectSubtitleType(_currentFileName);
         if (!isNetwork || bAnalyzeNetworkStream)
         {
           Task.Factory.StartNew(() => Analyze3DFormatVideo(_currentMediaType));
