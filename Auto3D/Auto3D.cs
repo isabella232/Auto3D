@@ -1458,30 +1458,55 @@ namespace MediaPortal.ProcessPlugins.Auto3D
       // check for embedded subtitles
 
       var result = eSubTitle.None;
-      var mi = new MediaInfo();
 
-      mi.Open(s);
-
-      var sct = mi.Count_Get(StreamKind.Text);
-
-      for (var i = 0; i < sct; ++i)
+      if (g_Player._mediaInfo != null)
       {
-        var format = mi.Get(StreamKind.Text, i, "Format").ToLowerInvariant();
+        var mi = g_Player._mediaInfo;
 
-        if (textSubtitleFormatsFileAndEmbedded.Contains(format))
+        for (var i = 0; i < mi.SubtitleFormatsDetected.Count(); ++i)
         {
-          result = eSubTitle.TextBased;
-          break;
-        }
+          var format = mi.SubtitleFormatsDetected[i].ToLowerInvariant();
 
-        if (imageSubtitleFormatsEmbedded.Contains(format))
-        {
-          result = eSubTitle.ImageBased;
-          break;
+          if (textSubtitleFormatsFileAndEmbedded.Contains(format))
+          {
+            result = eSubTitle.TextBased;
+            break;
+          }
+
+          if (imageSubtitleFormatsEmbedded.Contains(format))
+          {
+            result = eSubTitle.ImageBased;
+            break;
+          }
         }
       }
+      else
+      {
+        var mi = new MediaInfo();
 
-      mi.Close();
+        mi.Open(s);
+
+        var sct = mi.Count_Get(StreamKind.Text);
+
+        for (var i = 0; i < sct; ++i)
+        {
+          var format = mi.Get(StreamKind.Text, i, "Format").ToLowerInvariant();
+
+          if (textSubtitleFormatsFileAndEmbedded.Contains(format))
+          {
+            result = eSubTitle.TextBased;
+            break;
+          }
+
+          if (imageSubtitleFormatsEmbedded.Contains(format))
+          {
+            result = eSubTitle.ImageBased;
+            break;
+          }
+        }
+
+        mi.Close();
+      }
       return result;
     }
 

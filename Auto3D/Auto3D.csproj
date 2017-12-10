@@ -64,8 +64,8 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Core, Version=1.15.100.0, Culture=neutral, processorArchitecture=x86">
-      <HintPath>..\packages\MediaPortal.MP1.Plugin.1.15.100.0\lib\net40\Core.dll</HintPath>
-      <Private>True</Private>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files (x86)\Team MediaPortal\MediaPortal\Core.dll</HintPath>
     </Reference>
     <Reference Include="Dialogs, Version=1.15.100.0, Culture=neutral, processorArchitecture=x86">
       <HintPath>..\packages\MediaPortal.MP1.Plugin.1.15.100.0\lib\net40\Dialogs.dll</HintPath>
