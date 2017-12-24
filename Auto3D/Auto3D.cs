@@ -1003,6 +1003,7 @@ namespace MediaPortal.ProcessPlugins.Auto3D
 
         _bPlaying = false;
         bForceSubtitleMode = false;
+        _currentModeSelected = false;
         // reset timer count
         CounterTimer = 0;
 
@@ -1223,44 +1224,52 @@ namespace MediaPortal.ProcessPlugins.Auto3D
           _activeDevice.SwitchFormat(_currentMode, VideoFormat.Fmt2D);
           GUIGraphicsContext.Render3DMode = GUIGraphicsContext.eRender3DMode.None;
           _currentMode = VideoFormat.Fmt2D;
+          _currentModeSelected = true;
           break;
 
         case "3D Side by Side":
           _activeDevice.SwitchFormat(_currentMode, VideoFormat.Fmt3DSBS);
           GUIGraphicsContext.Render3DMode = GUIGraphicsContext.eRender3DMode.SideBySide;
           _currentMode = VideoFormat.Fmt3DSBS;
+          _currentModeSelected = true;
           break;
 
         case "3D Top and Bottom":
           _activeDevice.SwitchFormat(_currentMode, VideoFormat.Fmt3DTAB);
           GUIGraphicsContext.Render3DMode = GUIGraphicsContext.eRender3DMode.TopAndBottom;
           _currentMode = VideoFormat.Fmt3DTAB;
+          _currentModeSelected = true;
           break;
 
         case "2D -> 3D via TV":
           _activeDevice.SwitchFormat(_currentMode, VideoFormat.Fmt2D3D);
           GUIGraphicsContext.Render3DMode = GUIGraphicsContext.eRender3DMode.None;
           _currentMode = VideoFormat.Fmt2D3D;
+          _currentModeSelected = true;
           break;
 
         case "3D SBS -> 2D via MediaPortal":
           _activeDevice.SwitchFormat(_currentMode, VideoFormat.Fmt2D);
           GUIGraphicsContext.Render3DMode = GUIGraphicsContext.eRender3DMode.SideBySideTo2D;
           _currentMode = VideoFormat.Fmt2D;
+          _currentModeSelected = true;
           break;
 
         case "3D TAB -> 2D via MediaPortal":
           _activeDevice.SwitchFormat(_currentMode, VideoFormat.Fmt2D);
           GUIGraphicsContext.Render3DMode = GUIGraphicsContext.eRender3DMode.TopAndBottomTo2D;
           _currentMode = VideoFormat.Fmt2D;
+          _currentModeSelected = true;
           break;
 
         case "3D Reverse Mode":
           GUIGraphicsContext.Switch3DSides = true;
+          _currentModeSelected = true;
           break;
 
         case "3D Normal Mode":
           GUIGraphicsContext.Switch3DSides = false;
+          _currentModeSelected = true;
           break;
 
         case "3D MVC Mode":
@@ -1268,12 +1277,14 @@ namespace MediaPortal.ProcessPlugins.Auto3D
           GUIGraphicsContext.Render3DMode = GUIGraphicsContext.eRender3DMode.None;
           _currentMode = VideoFormat.Mvc3D;
           GUIGraphicsContext.Switch3DSides = false;
+          _currentModeSelected = true;
           break;
 
         case "2D -> 3D SBS via MediaPortal":
           _activeDevice.SwitchFormat(_currentMode, VideoFormat.Fmt3DSBS);
           GUIGraphicsContext.Render3DMode = GUIGraphicsContext.eRender3DMode.SideBySideFrom2D;
           _currentMode = VideoFormat.Fmt3DSBS;
+          _currentModeSelected = true;
           break;
 
         case "Subtitle displayed mode change 3D/2D":
@@ -1285,6 +1296,7 @@ namespace MediaPortal.ProcessPlugins.Auto3D
       _dlgMenu = null;
     }
 
+    public bool _currentModeSelected { get; set; }
 
     public static bool IsNetworkVideo(string strPath)
     {
@@ -1553,7 +1565,7 @@ namespace MediaPortal.ProcessPlugins.Auto3D
       finally
       {
         _reEntrant = false;
-        if (CounterTimer >= 2)
+        if (CounterTimer >= 2 || _currentModeSelected)
         {
           _analyzeTimer.Stop();
         }
