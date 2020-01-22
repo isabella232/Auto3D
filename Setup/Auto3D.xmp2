@@ -495,9 +495,9 @@ Click Next to continue or Cancel to exit Setup.</Value>
     <UpdateUrl />
     <Version>
       <Major>1</Major>
-      <Minor>16</Minor>
+      <Minor>17</Minor>
       <Build>0</Build>
-      <Revision>6</Revision>
+      <Revision>0</Revision>
     </Version>
     <ExtensionDescription />
     <VersionDescription />
