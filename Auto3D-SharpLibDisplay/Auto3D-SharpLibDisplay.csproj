@@ -50,14 +50,16 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Common.Utils, Version=1.15.0.26, Culture=neutral, processorArchitecture=x86">
-      <HintPath>..\packages\MediaPortal.MP1.Plugin.1.15.0\lib\net40\Common.Utils.dll</HintPath>
+      <HintPath>C:\Program Files (x86)\Team MediaPortal\MediaPortal\Common.Utils.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
       <Private>True</Private>
     </Reference>
     <Reference Include="Core">
       <HintPath>C:\Program Files (x86)\Team MediaPortal\MediaPortal\Core.dll</HintPath>
     </Reference>
     <Reference Include="Dialogs, Version=1.15.0.26, Culture=neutral, processorArchitecture=x86">
-      <HintPath>..\packages\MediaPortal.MP1.Plugin.1.15.0\lib\net40\Dialogs.dll</HintPath>
+      <HintPath>C:\Program Files (x86)\Team MediaPortal\MediaPortal\plugins\Windows\Dialogs.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
       <Private>True</Private>
     </Reference>
     <Reference Include="SharpLibDisplay, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -73,7 +75,8 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
     <Reference Include="Utils, Version=1.15.0.26, Culture=neutral, processorArchitecture=x86">
-      <HintPath>..\packages\MediaPortal.MP1.Plugin.1.15.0\lib\net40\Utils.dll</HintPath>
+      <HintPath>C:\Program Files (x86)\Team MediaPortal\MediaPortal\Utils.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
       <Private>True</Private>
     </Reference>
   </ItemGroup>
