@@ -1477,9 +1477,9 @@ namespace MediaPortal.ProcessPlugins.Auto3D
       {
         var mi = g_Player._mediaInfo;
 
-        for (var i = 0; i < mi.SubtitleFormatsDetected.Count(); ++i)
+        for (var i = 0; i < mi.Subtitles.Count(); ++i)
         {
-          var format = mi.SubtitleFormatsDetected[i].ToLowerInvariant();
+          var format = mi.Subtitles[i].Format.ToLowerInvariant();
 
           if (textSubtitleFormatsFileAndEmbedded.Contains(format))
           {
@@ -1496,15 +1496,15 @@ namespace MediaPortal.ProcessPlugins.Auto3D
       }
       else
       {
-        var mi = new MediaInfo();
+        var mi = new MediaInfo.MediaInfo();
 
         mi.Open(s);
 
-        var sct = mi.Count_Get(StreamKind.Text);
+        var sct = mi.CountGet(MediaInfo.StreamKind.Text);
 
         for (var i = 0; i < sct; ++i)
         {
-          var format = mi.Get(StreamKind.Text, i, "Format").ToLowerInvariant();
+          var format = mi.Get(MediaInfo.StreamKind.Text, i, "Format").ToLowerInvariant();
 
           if (textSubtitleFormatsFileAndEmbedded.Contains(format))
           {
